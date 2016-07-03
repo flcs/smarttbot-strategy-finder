@@ -9,7 +9,7 @@ import org.junit.Test;
 import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.Tick;
 import eu.verdelhan.ta4j.TimeSeries;
-import main.shell.TimeSeriesReader;
+import main.shell.reader.TimeSeriesReader;
 
 public class TimeSeriesReaderTest {
 
