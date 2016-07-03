@@ -10,6 +10,7 @@ import eu.verdelhan.ta4j.Order.OrderType;
 import eu.verdelhan.ta4j.TimeSeries;
 import eu.verdelhan.ta4j.Trade;
 import main.core.parameter.MovingAverageParameters;
+import main.core.parameter.RSIParameters;
 import main.core.parameter.RobotParameters;
 import main.core.strategy.RobotStrategy;
 
@@ -59,6 +60,53 @@ public class RobotStrategyTest {
 		Assert.assertEquals(13, trade3.getExit().getIndex());
 		Assert.assertEquals(OrderType.BUY, trade3.getExit().getType());
 		Assert.assertEquals(Decimal.valueOf(8), trade3.getExit().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade3.getExit().getAmount());
+	}
+
+	@Test
+	public void backtestIFR() {
+		// Arrange
+		int[] closingPrices = { 15, 16, 31, 24, 3, 16, 17, 17, 21, 24, 23, 19, 16, 20 };
+		TimeSeries series = TimeSeriesHelper.getTimeSeries(closingPrices);
+
+		RSIParameters ifr = RSIParameters.of(3, 30, 70);
+		RobotParameters parameters = RobotParameters.of(ifr);
+
+		// Act
+		List<Trade> trades = RobotStrategy.backtest(series, parameters);
+
+		// Assert
+		Trade trade1 = trades.get(0);
+		Assert.assertEquals(4, trade1.getEntry().getIndex());
+		Assert.assertEquals(OrderType.BUY, trade1.getEntry().getType());
+		Assert.assertEquals(Decimal.valueOf(3), trade1.getEntry().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade1.getEntry().getAmount());
+
+		Assert.assertEquals(9, trade1.getExit().getIndex());
+		Assert.assertEquals(OrderType.SELL, trade1.getExit().getType());
+		Assert.assertEquals(Decimal.valueOf(24), trade1.getExit().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade1.getExit().getAmount());
+
+		Trade trade2 = trades.get(1);
+		Assert.assertEquals(9, trade2.getEntry().getIndex());
+		Assert.assertEquals(OrderType.SELL, trade2.getEntry().getType());
+		Assert.assertEquals(Decimal.valueOf(24), trade2.getEntry().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade2.getEntry().getAmount());
+
+		Assert.assertEquals(12, trade2.getExit().getIndex());
+		Assert.assertEquals(OrderType.BUY, trade2.getExit().getType());
+		Assert.assertEquals(Decimal.valueOf(16), trade2.getExit().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade2.getExit().getAmount());
+
+		Trade trade3 = trades.get(2);
+		Assert.assertEquals(12, trade3.getEntry().getIndex());
+		Assert.assertEquals(OrderType.BUY, trade3.getEntry().getType());
+		Assert.assertEquals(Decimal.valueOf(16), trade3.getEntry().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade3.getEntry().getAmount());
+
+		Assert.assertEquals(13, trade3.getExit().getIndex());
+		Assert.assertEquals(OrderType.SELL, trade3.getExit().getType());
+		Assert.assertEquals(Decimal.valueOf(20), trade3.getExit().getPrice());
 		Assert.assertEquals(Decimal.valueOf(1), trade3.getExit().getAmount());
 	}
 }

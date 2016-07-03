@@ -5,34 +5,22 @@ import java.util.List;
 
 import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.Order.OrderType;
-import eu.verdelhan.ta4j.Rule;
 import eu.verdelhan.ta4j.Strategy;
 import eu.verdelhan.ta4j.TimeSeries;
 import eu.verdelhan.ta4j.Trade;
 import eu.verdelhan.ta4j.TradingRecord;
 import eu.verdelhan.ta4j.indicators.simple.ClosePriceIndicator;
-import eu.verdelhan.ta4j.indicators.trackers.SMAIndicator;
-import eu.verdelhan.ta4j.trading.rules.CrossedDownIndicatorRule;
-import eu.verdelhan.ta4j.trading.rules.CrossedUpIndicatorRule;
 import main.core.parameter.RobotParameters;
 
 public class RobotStrategy {
 	private static final Decimal NumberOfContracts = Decimal.valueOf(1);
 
 	public static List<Trade> backtest(TimeSeries series, RobotParameters parameters) {
-		ClosePriceIndicator closePrice = new ClosePriceIndicator(series);
+		ClosePriceIndicator closePrices = new ClosePriceIndicator(series);
+		StrategyRules rules = new StrategyRules(closePrices, parameters);
 
-		int shortPeriods = parameters.getMovingAverageParameters().getShortPeriods();
-		SMAIndicator shortSMA = new SMAIndicator(closePrice, shortPeriods);
-
-		int longPeriods = parameters.getMovingAverageParameters().getLongPeriods();
-		SMAIndicator longSMA = new SMAIndicator(closePrice, longPeriods);
-
-		Rule crossDownRule = new CrossedDownIndicatorRule(shortSMA, longSMA);
-		Rule crossUpRule = new CrossedUpIndicatorRule(shortSMA, longSMA);
-
-		Strategy buyStrategy = new Strategy(crossUpRule, crossDownRule);
-		Strategy sellStrategy = new Strategy(crossDownRule, crossUpRule);
+		Strategy buyStrategy = new Strategy(rules.getBuyEntryRule(), rules.getBuyExitRule());
+		Strategy sellStrategy = new Strategy(rules.getSellEntryRule(), rules.getSellExitRule());
 
 		return run(series, buyStrategy, sellStrategy);
 	}
