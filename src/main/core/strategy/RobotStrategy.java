@@ -22,10 +22,11 @@ public class RobotStrategy {
 		Strategy buyStrategy = new Strategy(rules.getBuyEntryRule(), rules.getBuyExitRule());
 		Strategy sellStrategy = new Strategy(rules.getSellEntryRule(), rules.getSellExitRule());
 
-		return run(series, buyStrategy, sellStrategy);
+		return run(series, buyStrategy, sellStrategy, parameters);
 	}
 
-	private static List<Trade> run(TimeSeries series, Strategy buyStrategy, Strategy sellStrategy) {
+	private static List<Trade> run(TimeSeries series, Strategy buyStrategy, Strategy sellStrategy,
+			RobotParameters param) {
 		List<Trade> trades = new ArrayList<>();
 
 		TradingRecord buyingRecord = new TradingRecord(OrderType.BUY);
@@ -35,8 +36,10 @@ public class RobotStrategy {
 		boolean sold = false;
 
 		for (int i = series.getBegin(); i < series.getEnd(); i++) {
-			boolean buyOperate = buyStrategy.shouldOperate(i, buyingRecord);
-			boolean sellOperate = sellStrategy.shouldOperate(i, sellingRecord);
+			boolean exitLimit = param.exitTimeLimit(series.getTick(i));
+
+			boolean buyOperate = (!exitLimit && buyStrategy.shouldOperate(i, buyingRecord)) || (exitLimit && bought);
+			boolean sellOperate = (!exitLimit && sellStrategy.shouldOperate(i, sellingRecord)) || (exitLimit && sold);
 
 			if (buyOperate && !bought && sellOperate && !sold)
 				buyOperate = sellOperate = false;

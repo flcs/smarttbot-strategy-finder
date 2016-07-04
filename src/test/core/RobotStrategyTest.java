@@ -1,7 +1,9 @@
 package test.core;
 
+import java.time.LocalTime;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,6 +12,7 @@ import eu.verdelhan.ta4j.Order.OrderType;
 import eu.verdelhan.ta4j.TimeSeries;
 import eu.verdelhan.ta4j.Trade;
 import main.core.parameter.BollingerBandsParameters;
+import main.core.parameter.DayTradeParameters;
 import main.core.parameter.EntryParameters;
 import main.core.parameter.MovingAverageParameters;
 import main.core.parameter.RSIParameters;
@@ -210,5 +213,33 @@ public class RobotStrategyTest {
 		Assert.assertEquals(OrderType.SELL, trade3.getExit().getType());
 		Assert.assertEquals(Decimal.valueOf(42), trade3.getExit().getPrice());
 		Assert.assertEquals(Decimal.valueOf(1), trade3.getExit().getAmount());
+	}
+
+	@Test
+	public void backtestExitTimeLimit() {
+		// Arrange
+		int[] closingPrices = { 50, 49, 51, 47, 17, 17, 17, 16 };
+		DateTime seriesStartingTime = new DateTime(2016, 7, 1, 17, 25);
+		TimeSeries series = TimeSeriesHelper.getTimeSeries(closingPrices, seriesStartingTime);
+
+		RSIParameters rsi = new RSIParameters(3, 30, 70);
+		EntryParameters entryParameters = new EntryParameters(null, rsi, null);
+		DayTradeParameters dayTradeParameters = new DayTradeParameters(LocalTime.of(17, 30));
+		RobotParameters parameters = new RobotParameters(entryParameters, dayTradeParameters);
+
+		// Act
+		List<Trade> trades = RobotStrategy.backtest(series, parameters);
+
+		// Assert
+		Trade trade1 = trades.get(0);
+		Assert.assertEquals(3, trade1.getEntry().getIndex());
+		Assert.assertEquals(OrderType.BUY, trade1.getEntry().getType());
+		Assert.assertEquals(Decimal.valueOf(47), trade1.getEntry().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade1.getEntry().getAmount());
+
+		Assert.assertEquals(4, trade1.getExit().getIndex());
+		Assert.assertEquals(OrderType.SELL, trade1.getExit().getType());
+		Assert.assertEquals(Decimal.valueOf(17), trade1.getExit().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade1.getExit().getAmount());
 	}
 }
