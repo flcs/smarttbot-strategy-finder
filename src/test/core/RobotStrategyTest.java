@@ -19,7 +19,7 @@ import main.core.parameter.RSIParameters;
 import main.core.parameter.RobotParameters;
 import main.core.strategy.RobotStrategy;
 
-public class RobotStrategyTest {
+public class RobotStrategyTest extends AbstractTest {
 
 	@Test
 	public void backtestSimpleMovingAverage() {
@@ -70,7 +70,7 @@ public class RobotStrategyTest {
 	}
 
 	@Test
-	public void backtestIFR() {
+	public void backtestRSI() {
 		// Arrange
 		int[] closingPrices = { 15, 16, 31, 24, 3, 16, 17, 17, 21, 24, 23, 19, 16, 20 };
 		TimeSeries series = TimeSeriesHelper.getTimeSeries(closingPrices);

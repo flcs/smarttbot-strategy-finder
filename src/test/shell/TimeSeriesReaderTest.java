@@ -10,8 +10,9 @@ import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.Tick;
 import eu.verdelhan.ta4j.TimeSeries;
 import main.shell.reader.TimeSeriesReader;
+import test.core.AbstractTest;
 
-public class TimeSeriesReaderTest {
+public class TimeSeriesReaderTest extends AbstractTest {
 
 	@Test
 	public void readSampleData() throws IOException {
