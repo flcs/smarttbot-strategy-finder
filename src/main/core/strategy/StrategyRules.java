@@ -8,15 +8,13 @@ import eu.verdelhan.ta4j.indicators.trackers.SMAIndicator;
 import eu.verdelhan.ta4j.indicators.trackers.bollinger.BollingerBandsLowerIndicator;
 import eu.verdelhan.ta4j.indicators.trackers.bollinger.BollingerBandsMiddleIndicator;
 import eu.verdelhan.ta4j.indicators.trackers.bollinger.BollingerBandsUpperIndicator;
-import eu.verdelhan.ta4j.trading.rules.CrossedDownIndicatorRule;
-import eu.verdelhan.ta4j.trading.rules.CrossedUpIndicatorRule;
+import eu.verdelhan.ta4j.trading.rules.OverIndicatorRule;
+import eu.verdelhan.ta4j.trading.rules.UnderIndicatorRule;
 import main.core.indicator.WilderRSIIndicator;
 import main.core.parameter.BollingerBandsParameters;
 import main.core.parameter.MovingAverageParameters;
 import main.core.parameter.RSIParameters;
 import main.core.parameter.RobotParameters;
-import main.core.rule.CrossDownRule;
-import main.core.rule.CrossUpRule;
 
 public class StrategyRules {
 
@@ -53,14 +51,14 @@ public class StrategyRules {
 		SMAIndicator shortSMA = new SMAIndicator(prices, param.getShortPeriods());
 		SMAIndicator longSMA = new SMAIndicator(prices, param.getLongPeriods());
 
-		Rule crossDownRule = new CrossedDownIndicatorRule(shortSMA, longSMA);
-		Rule crossUpRule = new CrossedUpIndicatorRule(shortSMA, longSMA);
+		Rule underRule = new UnderIndicatorRule(shortSMA, longSMA);
+		Rule overRule = new OverIndicatorRule(shortSMA, longSMA);
 
-		buyEntryRule = buyEntryRule == null ? crossDownRule : buyEntryRule.and(crossDownRule);
-		buyExitRule = buyExitRule == null ? crossUpRule : buyExitRule.or(crossUpRule);
+		buyEntryRule = buyEntryRule == null ? underRule : buyEntryRule.and(underRule);
+		buyExitRule = buyExitRule == null ? overRule : buyExitRule.or(overRule);
 
-		sellEntryRule = sellEntryRule == null ? crossUpRule : sellEntryRule.and(crossUpRule);
-		sellExitRule = sellExitRule == null ? crossDownRule : sellExitRule.or(crossDownRule);
+		sellEntryRule = sellEntryRule == null ? overRule : sellEntryRule.and(overRule);
+		sellExitRule = sellExitRule == null ? underRule : sellExitRule.or(underRule);
 	}
 
 	private void setRSIRules() {
@@ -73,14 +71,14 @@ public class StrategyRules {
 		Decimal lowerLimit = Decimal.valueOf(param.getLowerValue());
 		Decimal upperLimit = Decimal.valueOf(param.getUpperValue());
 
-		Rule crossDownRule = new CrossDownRule(rsiIndicator, lowerLimit, param.getPeriods());
-		Rule crossUpRule = new CrossUpRule(rsiIndicator, upperLimit, param.getPeriods());
+		Rule underRule = new UnderIndicatorRule(rsiIndicator, lowerLimit);
+		Rule overRule = new OverIndicatorRule(rsiIndicator, upperLimit);
 
-		buyEntryRule = buyEntryRule == null ? crossDownRule : buyEntryRule.and(crossDownRule);
-		buyExitRule = buyExitRule == null ? crossUpRule : buyExitRule.or(crossUpRule);
+		buyEntryRule = buyEntryRule == null ? underRule : buyEntryRule.and(underRule);
+		buyExitRule = buyExitRule == null ? overRule : buyExitRule.or(overRule);
 
-		sellEntryRule = sellEntryRule == null ? crossUpRule : sellEntryRule.and(crossUpRule);
-		sellExitRule = sellExitRule == null ? crossDownRule : sellExitRule.or(crossDownRule);
+		sellEntryRule = sellEntryRule == null ? overRule : sellEntryRule.and(overRule);
+		sellExitRule = sellExitRule == null ? underRule : sellExitRule.or(underRule);
 	}
 
 	private void setBBRules() {
@@ -95,14 +93,14 @@ public class StrategyRules {
 		BollingerBandsLowerIndicator lower = new BollingerBandsLowerIndicator(middle, stdDeviation, param.getFactor());
 		BollingerBandsUpperIndicator upper = new BollingerBandsUpperIndicator(middle, stdDeviation, param.getFactor());
 
-		Rule crossDownRule = new CrossedDownIndicatorRule(prices, lower);
-		Rule crossUpRule = new CrossedUpIndicatorRule(prices, upper);
+		Rule underRule = new UnderIndicatorRule(prices, lower);
+		Rule overRule = new OverIndicatorRule(prices, upper);
 
-		buyEntryRule = buyEntryRule == null ? crossDownRule : buyEntryRule.and(crossDownRule);
-		buyExitRule = buyExitRule == null ? crossUpRule : buyExitRule.or(crossUpRule);
+		buyEntryRule = buyEntryRule == null ? underRule : buyEntryRule.and(underRule);
+		buyExitRule = buyExitRule == null ? overRule : buyExitRule.or(overRule);
 
-		sellEntryRule = sellEntryRule == null ? crossUpRule : sellEntryRule.and(crossUpRule);
-		sellExitRule = sellExitRule == null ? crossDownRule : sellExitRule.or(crossDownRule);
+		sellEntryRule = sellEntryRule == null ? overRule : sellEntryRule.and(overRule);
+		sellExitRule = sellExitRule == null ? underRule : sellExitRule.or(underRule);
 	}
 
 	public Rule getBuyEntryRule() {

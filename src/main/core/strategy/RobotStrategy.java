@@ -36,10 +36,12 @@ public class RobotStrategy {
 		boolean sold = false;
 
 		for (int i = series.getBegin(); i < series.getEnd(); i++) {
-			boolean exitLimit = param.exitTimeLimit(series.getTick(i));
+			boolean canOperate = param.canOperate(series.getTick(i));
+			boolean buyOperate = buyStrategy.shouldOperate(i, buyingRecord);
+			boolean sellOperate = sellStrategy.shouldOperate(i, sellingRecord);
 
-			boolean buyOperate = (!exitLimit && buyStrategy.shouldOperate(i, buyingRecord)) || (exitLimit && bought);
-			boolean sellOperate = (!exitLimit && sellStrategy.shouldOperate(i, sellingRecord)) || (exitLimit && sold);
+			buyOperate = (canOperate && buyOperate) || (!canOperate && bought);
+			sellOperate = (canOperate && sellOperate) || (!canOperate && sold);
 
 			if (buyOperate && !bought && sellOperate && !sold)
 				buyOperate = sellOperate = false;
@@ -52,7 +54,7 @@ public class RobotStrategy {
 			}
 			if (sellOperate) {
 				sellingRecord.operate(i, series.getTick(i).getClosePrice(), NumberOfContracts);
-				if (bought)
+				if (sold)
 					trades.add(sellingRecord.getLastTrade());
 				sold = !sold;
 			}

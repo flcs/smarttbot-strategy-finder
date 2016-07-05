@@ -23,7 +23,8 @@ public class RobotParameters {
 		return dayTradeParameters;
 	}
 
-	public boolean exitTimeLimit(Tick tick) {
-		return dayTradeParameters != null && dayTradeParameters.exitTimeLimit(tick);
+	public boolean canOperate(Tick tick) {
+		return dayTradeParameters == null || dayTradeParameters.canOperate(tick);
 	}
+
 }
