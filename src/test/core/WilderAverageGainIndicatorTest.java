@@ -9,6 +9,9 @@ import eu.verdelhan.ta4j.TimeSeries;
 import eu.verdelhan.ta4j.indicators.simple.ClosePriceIndicator;
 import main.core.indicator.AverageType;
 import main.core.indicator.WilderAverageIndicator;
+import test.core.helpers.PriceSeries;
+import test.core.helpers.PriceType;
+import test.core.helpers.TimeSeriesHelper;
 
 public class WilderAverageGainIndicatorTest extends AbstractTest {
 	private static TimeSeries series;
@@ -16,7 +19,8 @@ public class WilderAverageGainIndicatorTest extends AbstractTest {
 	@BeforeClass
 	public static void setupClosingPrices() {
 		int[] closingPrices = { 10, 9, 11, 15, 20, 10, 12, 17, 13, 15, 14, 19, 10 };
-		series = TimeSeriesHelper.getTimeSeries(closingPrices);
+		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closingPrices);
+		series = TimeSeriesHelper.getTimeSeries(closeSeries);
 	}
 
 	@Test

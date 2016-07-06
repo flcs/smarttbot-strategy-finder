@@ -8,6 +8,9 @@ import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.TimeSeries;
 import eu.verdelhan.ta4j.indicators.simple.ClosePriceIndicator;
 import main.core.indicator.WilderRSIIndicator;
+import test.core.helpers.PriceSeries;
+import test.core.helpers.PriceType;
+import test.core.helpers.TimeSeriesHelper;
 
 public class WilderRSIIndicatorTest extends AbstractTest {
 	private static TimeSeries series;
@@ -15,7 +18,8 @@ public class WilderRSIIndicatorTest extends AbstractTest {
 	@BeforeClass
 	public static void setupClosingPrices() {
 		int[] closingPrices = { 20, 15, 14, 18, 16, 11, 15, 7, 6, 15, 14, 19, 10, 1 };
-		series = TimeSeriesHelper.getTimeSeries(closingPrices);
+		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closingPrices);
+		series = TimeSeriesHelper.getTimeSeries(closeSeries);
 	}
 
 	@Test

@@ -18,6 +18,9 @@ import main.core.parameter.MovingAverageParameters;
 import main.core.parameter.RSIParameters;
 import main.core.parameter.RobotParameters;
 import main.core.strategy.RobotStrategy;
+import test.core.helpers.PriceSeries;
+import test.core.helpers.PriceType;
+import test.core.helpers.TimeSeriesHelper;
 
 public class RobotStrategyTest extends AbstractTest {
 
@@ -25,7 +28,8 @@ public class RobotStrategyTest extends AbstractTest {
 	public void backtestSimpleMovingAverage() {
 		// Arrange
 		int[] closingPrices = { 15, 16, 30, 29, 13, 16, 17, 18, 25, 24, 23, 2, 3, 8 };
-		TimeSeries series = TimeSeriesHelper.getTimeSeries(closingPrices);
+		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closingPrices);
+		TimeSeries series = TimeSeriesHelper.getTimeSeries(closeSeries);
 
 		MovingAverageParameters movingAverage = new MovingAverageParameters(3, 6);
 		EntryParameters entryParameters = new EntryParameters(movingAverage, null, null);
@@ -84,7 +88,8 @@ public class RobotStrategyTest extends AbstractTest {
 	public void backtestRSI() {
 		// Arrange
 		int[] closingPrices = { 15, 16, 31, 24, 3, 16, 17, 17, 21, 24, 23, 19, 16, 20 };
-		TimeSeries series = TimeSeriesHelper.getTimeSeries(closingPrices);
+		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closingPrices);
+		TimeSeries series = TimeSeriesHelper.getTimeSeries(closeSeries);
 
 		RSIParameters rsi = new RSIParameters(3, 30, 70);
 		EntryParameters entryParameters = new EntryParameters(null, rsi, null);
@@ -143,7 +148,8 @@ public class RobotStrategyTest extends AbstractTest {
 	public void backtestBollingerBands() {
 		// Arrange
 		int[] closingPrices = { 10, 12, 8, 11, 9, 19, 20, 15, 17, 13, 17, 8, 10, 27, 15 };
-		TimeSeries series = TimeSeriesHelper.getTimeSeries(closingPrices);
+		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closingPrices);
+		TimeSeries series = TimeSeriesHelper.getTimeSeries(closeSeries);
 
 		BollingerBandsParameters bb = new BollingerBandsParameters(7, Decimal.valueOf(2));
 		EntryParameters entryParameters = new EntryParameters(null, null, bb);
@@ -191,7 +197,8 @@ public class RobotStrategyTest extends AbstractTest {
 	public void backtestUsingAllIndicators() {
 		// Arrange
 		int[] closingPrices = { 50, 49, 50, 51, 49, 46, 40, 45, 63, 20, 45, 43, 42, 40, 45 };
-		TimeSeries series = TimeSeriesHelper.getTimeSeries(closingPrices);
+		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closingPrices);
+		TimeSeries series = TimeSeriesHelper.getTimeSeries(closeSeries);
 
 		MovingAverageParameters movingAverage = new MovingAverageParameters(3, 6);
 		RSIParameters rsi = new RSIParameters(3, 30, 70);
@@ -242,7 +249,9 @@ public class RobotStrategyTest extends AbstractTest {
 		// Arrange
 		int[] closingPrices = { 50, 50, 51, 49, 52, 52, 53, 50 };
 		DateTime seriesStartingTime = new DateTime(2016, 7, 1, 17, 25);
-		TimeSeries series = TimeSeriesHelper.getTimeSeries(closingPrices, seriesStartingTime);
+
+		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closingPrices);
+		TimeSeries series = TimeSeriesHelper.getTimeSeries(seriesStartingTime, closeSeries);
 
 		RSIParameters rsi = new RSIParameters(3, 30, 70);
 		EntryParameters entryParameters = new EntryParameters(null, rsi, null);
@@ -265,7 +274,8 @@ public class RobotStrategyTest extends AbstractTest {
 	public void backtestInitialEntryTimeLimit() {
 		// Arrange
 		int[] closingPrices = { 50, 49, 51, 47, 17, 17, 17, 16 };
-		TimeSeries series = TimeSeriesHelper.getTimeSeries(closingPrices);
+		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closingPrices);
+		TimeSeries series = TimeSeriesHelper.getTimeSeries(closeSeries);
 
 		RSIParameters rsi = new RSIParameters(3, 30, 70);
 		EntryParameters entryParameters = new EntryParameters(null, rsi, null);
@@ -289,7 +299,9 @@ public class RobotStrategyTest extends AbstractTest {
 		// Arrange
 		int[] closingPrices = { 20, 17, 22, 21, 19, 20, 21, 20 };
 		DateTime seriesStartingTime = new DateTime(2016, 7, 1, 16, 35);
-		TimeSeries series = TimeSeriesHelper.getTimeSeries(closingPrices, seriesStartingTime);
+
+		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closingPrices);
+		TimeSeries series = TimeSeriesHelper.getTimeSeries(seriesStartingTime, closeSeries);
 
 		MovingAverageParameters movingAverage = new MovingAverageParameters(3, 6);
 		EntryParameters entryParameters = new EntryParameters(movingAverage, null, null);
@@ -308,7 +320,9 @@ public class RobotStrategyTest extends AbstractTest {
 		// Arrange
 		int[] closingPrices = { 42, 41, 40, 46, 45, 40, 38, 39, 34, 35, 31 };
 		DateTime seriesStartingTime = new DateTime(2016, 7, 1, 16, 35);
-		TimeSeries series = TimeSeriesHelper.getTimeSeries(closingPrices, seriesStartingTime);
+
+		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closingPrices);
+		TimeSeries series = TimeSeriesHelper.getTimeSeries(seriesStartingTime, closeSeries);
 
 		MovingAverageParameters movingAverage = new MovingAverageParameters(3, 6);
 		EntryParameters entryParameters = new EntryParameters(movingAverage, null, null);
