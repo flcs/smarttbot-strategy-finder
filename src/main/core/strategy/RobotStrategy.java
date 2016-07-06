@@ -36,12 +36,17 @@ public class RobotStrategy {
 		boolean sold = false;
 
 		for (int i = series.getBegin(); i < series.getEnd(); i++) {
-			boolean canOperate = param.canOperate(series.getTick(i));
+			boolean canOpen = param.canOpenPosition(series.getTick(i));
+			boolean forceClose = param.forceClosePosition(series.getTick(i));
+
 			boolean buyOperate = buyStrategy.shouldOperate(i, buyingRecord);
 			boolean sellOperate = sellStrategy.shouldOperate(i, sellingRecord);
 
-			buyOperate = (canOperate && buyOperate) || (!canOperate && bought);
-			sellOperate = (canOperate && sellOperate) || (!canOperate && sold);
+			buyOperate = buyOperate && (canOpen || bought);
+			sellOperate = sellOperate && (canOpen || sold);
+
+			buyOperate = buyOperate || (forceClose && bought);
+			sellOperate = sellOperate || (forceClose && sold);
 
 			if (buyOperate && !bought && sellOperate && !sold)
 				buyOperate = sellOperate = false;

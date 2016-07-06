@@ -23,8 +23,12 @@ public class RobotParameters {
 		return dayTradeParameters;
 	}
 
-	public boolean canOperate(Tick tick) {
-		return dayTradeParameters == null || dayTradeParameters.canOperate(tick);
+	public boolean canOpenPosition(Tick tick) {
+		return dayTradeParameters == null || dayTradeParameters.canOpenPosition(tick);
+	}
+
+	public boolean forceClosePosition(Tick tick) {
+		return dayTradeParameters != null && dayTradeParameters.forceClosePosition(tick);
 	}
 
 }
