@@ -14,6 +14,7 @@ import eu.verdelhan.ta4j.Trade;
 import main.core.parameter.BollingerBandsParameters;
 import main.core.parameter.DayTradeParameters;
 import main.core.parameter.EntryParameters;
+import main.core.parameter.ExitParameters;
 import main.core.parameter.MovingAverageParameters;
 import main.core.parameter.RSIParameters;
 import main.core.parameter.RobotParameters;
@@ -340,5 +341,57 @@ public class RobotStrategyTest extends AbstractTest {
 
 		Assert.assertEquals(6, trade1.getExit().getIndex());
 		Assert.assertEquals(OrderType.BUY, trade1.getExit().getType());
+	}
+
+	@Test
+	public void fixedStopLossOnABuyingTrade() {
+		// Arrange
+		int[] closePrices = { 50, 51, 49, 52, 51, 52, 49, 43, 42, 41, 38, 35, 41, 51, 50 };
+		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closePrices);
+		TimeSeries series = TimeSeriesHelper.getTimeSeries(closeSeries);
+
+		BollingerBandsParameters bbParam = new BollingerBandsParameters(7, Decimal.TWO);
+		EntryParameters entryParameters = new EntryParameters(null, null, bbParam);
+		ExitParameters exitParameters = new ExitParameters(Decimal.valueOf(16));
+		RobotParameters parameters = new RobotParameters(entryParameters, exitParameters);
+
+		// Act
+		List<Trade> trades = RobotStrategy.backtest(series, parameters);
+
+		// Assert
+		Trade trade1 = trades.get(0);
+		Assert.assertEquals(7, trade1.getEntry().getIndex());
+		Assert.assertEquals(OrderType.BUY, trade1.getEntry().getType());
+		Assert.assertEquals(Decimal.valueOf(43), trade1.getEntry().getPrice());
+
+		Assert.assertEquals(11, trade1.getExit().getIndex());
+		Assert.assertEquals(OrderType.SELL, trade1.getExit().getType());
+		Assert.assertEquals(Decimal.valueOf(35), trade1.getExit().getPrice());
+	}
+
+	@Test
+	public void fixedStopLossOnASellingTrade() {
+		// Arrange
+		int[] closePrices = { 50, 49, 51, 48, 49, 48, 51, 57, 58, 59, 62, 65, 59, 49, 50 };
+		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closePrices);
+		TimeSeries series = TimeSeriesHelper.getTimeSeries(closeSeries);
+
+		BollingerBandsParameters bbParam = new BollingerBandsParameters(7, Decimal.TWO);
+		EntryParameters entryParameters = new EntryParameters(null, null, bbParam);
+		ExitParameters exitParameters = new ExitParameters(Decimal.valueOf(12));
+		RobotParameters parameters = new RobotParameters(entryParameters, exitParameters);
+
+		// Act
+		List<Trade> trades = RobotStrategy.backtest(series, parameters);
+
+		// Assert
+		Trade trade1 = trades.get(0);
+		Assert.assertEquals(7, trade1.getEntry().getIndex());
+		Assert.assertEquals(OrderType.SELL, trade1.getEntry().getType());
+		Assert.assertEquals(Decimal.valueOf(57), trade1.getEntry().getPrice());
+
+		Assert.assertEquals(11, trade1.getExit().getIndex());
+		Assert.assertEquals(OrderType.BUY, trade1.getExit().getType());
+		Assert.assertEquals(Decimal.valueOf(65), trade1.getExit().getPrice());
 	}
 }
