@@ -1,15 +1,13 @@
 package main.core.parameters;
 
-import eu.verdelhan.ta4j.Decimal;
-
 public class ExitParameters {
-	private final Decimal fixedStopLoss;
+	private final FixedStopLossParameters fixedStopLoss;
 
-	public ExitParameters(Decimal fixedStopLoss) {
+	public ExitParameters(FixedStopLossParameters fixedStopLoss) {
 		this.fixedStopLoss = fixedStopLoss;
 	}
 
-	public Decimal getStopLoss() {
+	public FixedStopLossParameters getStopLoss() {
 		return fixedStopLoss;
 	}
 

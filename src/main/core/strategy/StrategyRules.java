@@ -15,9 +15,12 @@ import eu.verdelhan.ta4j.trading.rules.UnderIndicatorRule;
 import main.core.indicators.WilderRSIIndicator;
 import main.core.parameters.BollingerBandsParameters;
 import main.core.parameters.ExitParameters;
+import main.core.parameters.FixedStopLossParameters;
 import main.core.parameters.MovingAverageParameters;
 import main.core.parameters.RSIParameters;
 import main.core.parameters.RobotParameters;
+import main.core.parameters.StopType;
+import main.core.rules.AbsoluteStopLossRule;
 
 public class StrategyRules {
 	private final ClosePriceIndicator prices;
@@ -115,17 +118,24 @@ public class StrategyRules {
 		if (exitParam == null)
 			return;
 
-		Decimal fixedStopLoss = exitParam.getStopLoss();
+		FixedStopLossParameters fixedStopLoss = exitParam.getStopLoss();
 		if (fixedStopLoss == null)
 			return;
 
-		// Ta4j framework has a limitation and doesn't consider if it is a buying or a selling trade.
-		// Because of this, we need to use stop gain as a stop loss in a selling trade.
-		StopLossRule stopLossOnBuying = new StopLossRule(prices, fixedStopLoss);
-		StopGainRule stopLossOnSelling = new StopGainRule(prices, fixedStopLoss);
+		if (fixedStopLoss.getType() == StopType.ABSOLUTE) {
+			AbsoluteStopLossRule stopLossRule = new AbsoluteStopLossRule(prices, fixedStopLoss.getValue());
 
-		buyExitRule = buyExitRule == null ? stopLossOnBuying : buyExitRule.or(stopLossOnBuying);
-		sellExitRule = sellExitRule == null ? stopLossOnSelling : sellExitRule.or(stopLossOnSelling);
+			buyExitRule = buyExitRule == null ? stopLossRule : buyExitRule.or(stopLossRule);
+			sellExitRule = sellExitRule == null ? stopLossRule : sellExitRule.or(stopLossRule);
+		} else {
+			// Ta4j framework has a limitation and doesn't consider if it is a buying or a selling trade.
+			// Because of this, we need to use stop gain as a stop loss in a selling trade.
+			StopLossRule stopLossOnBuying = new StopLossRule(prices, fixedStopLoss.getValue());
+			StopGainRule stopLossOnSelling = new StopGainRule(prices, fixedStopLoss.getValue());
+
+			buyExitRule = buyExitRule == null ? stopLossOnBuying : buyExitRule.or(stopLossOnBuying);
+			sellExitRule = sellExitRule == null ? stopLossOnSelling : sellExitRule.or(stopLossOnSelling);
+		}
 	}
 
 	public Rule getBuyEntryRule() {
