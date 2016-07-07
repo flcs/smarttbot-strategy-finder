@@ -1,5 +1,7 @@
 package main.core.parameters;
 
+import main.core.parameters.exit.FixedStopLossParameters;
+
 public class ExitParameters {
 	private final FixedStopLossParameters fixedStopLoss;
 

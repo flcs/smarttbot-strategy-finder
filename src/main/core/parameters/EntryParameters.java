@@ -1,5 +1,9 @@
 package main.core.parameters;
 
+import main.core.parameters.entry.BollingerBandsParameters;
+import main.core.parameters.entry.MovingAverageParameters;
+import main.core.parameters.entry.RSIParameters;
+
 public class EntryParameters {
 	private final MovingAverageParameters movingAverageParameters;
 	private final RSIParameters rsiParameters;

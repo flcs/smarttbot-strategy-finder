@@ -1,4 +1,4 @@
-package main.core.parameters;
+package main.core.parameters.entry;
 
 public class MovingAverageParameters {
 	private final int shortPeriods;

@@ -13,13 +13,13 @@ import eu.verdelhan.ta4j.trading.rules.StopGainRule;
 import eu.verdelhan.ta4j.trading.rules.StopLossRule;
 import eu.verdelhan.ta4j.trading.rules.UnderIndicatorRule;
 import main.core.indicators.WilderRSIIndicator;
-import main.core.parameters.BollingerBandsParameters;
 import main.core.parameters.ExitParameters;
-import main.core.parameters.FixedStopLossParameters;
-import main.core.parameters.MovingAverageParameters;
-import main.core.parameters.RSIParameters;
 import main.core.parameters.RobotParameters;
 import main.core.parameters.StopType;
+import main.core.parameters.entry.BollingerBandsParameters;
+import main.core.parameters.entry.MovingAverageParameters;
+import main.core.parameters.entry.RSIParameters;
+import main.core.parameters.exit.FixedStopLossParameters;
 import main.core.rules.AbsoluteStopLossRule;
 
 public class StrategyRules {
