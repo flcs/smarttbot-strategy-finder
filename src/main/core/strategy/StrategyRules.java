@@ -12,12 +12,12 @@ import eu.verdelhan.ta4j.trading.rules.OverIndicatorRule;
 import eu.verdelhan.ta4j.trading.rules.StopGainRule;
 import eu.verdelhan.ta4j.trading.rules.StopLossRule;
 import eu.verdelhan.ta4j.trading.rules.UnderIndicatorRule;
-import main.core.indicator.WilderRSIIndicator;
-import main.core.parameter.BollingerBandsParameters;
-import main.core.parameter.ExitParameters;
-import main.core.parameter.MovingAverageParameters;
-import main.core.parameter.RSIParameters;
-import main.core.parameter.RobotParameters;
+import main.core.indicators.WilderRSIIndicator;
+import main.core.parameters.BollingerBandsParameters;
+import main.core.parameters.ExitParameters;
+import main.core.parameters.MovingAverageParameters;
+import main.core.parameters.RSIParameters;
+import main.core.parameters.RobotParameters;
 
 public class StrategyRules {
 	private final ClosePriceIndicator prices;

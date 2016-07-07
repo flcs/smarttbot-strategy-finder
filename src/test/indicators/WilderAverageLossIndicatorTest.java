@@ -1,4 +1,4 @@
-package test.core;
+package test.indicators;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -7,18 +7,19 @@ import org.junit.Test;
 import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.TimeSeries;
 import eu.verdelhan.ta4j.indicators.simple.ClosePriceIndicator;
-import main.core.indicator.AverageType;
-import main.core.indicator.WilderAverageIndicator;
-import test.core.helpers.PriceSeries;
-import test.core.helpers.PriceType;
-import test.core.helpers.TimeSeriesHelper;
+import main.core.indicators.AverageType;
+import main.core.indicators.WilderAverageIndicator;
+import test.AbstractTest;
+import test.helpers.PriceSeries;
+import test.helpers.PriceType;
+import test.helpers.TimeSeriesHelper;
 
-public class WilderAverageGainIndicatorTest extends AbstractTest {
+public class WilderAverageLossIndicatorTest extends AbstractTest {
 	private static TimeSeries series;
 
 	@BeforeClass
 	public static void setupClosingPrices() {
-		int[] closingPrices = { 10, 9, 11, 15, 20, 10, 12, 17, 13, 15, 14, 19, 10 };
+		int[] closingPrices = { 20, 15, 14, 18, 16, 11, 15, 7, 6, 15, 14, 19, 10 };
 		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closingPrices);
 		series = TimeSeriesHelper.getTimeSeries(closeSeries);
 	}
@@ -27,7 +28,7 @@ public class WilderAverageGainIndicatorTest extends AbstractTest {
 	public void getValueWhenIndexIsZero() {
 		// Arrange
 		ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
-		WilderAverageIndicator averageIndicator = new WilderAverageIndicator(closePriceIndicator, 3, AverageType.GAIN);
+		WilderAverageIndicator averageIndicator = new WilderAverageIndicator(closePriceIndicator, 3, AverageType.LOSS);
 
 		// Act
 		Decimal average = averageIndicator.getValue(0);
@@ -40,7 +41,7 @@ public class WilderAverageGainIndicatorTest extends AbstractTest {
 	public void getValueWhenIndexIsZeroAndOtherIndexesWereRetrieved() {
 		// Arrange
 		ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
-		WilderAverageIndicator averageIndicator = new WilderAverageIndicator(closePriceIndicator, 3, AverageType.GAIN);
+		WilderAverageIndicator averageIndicator = new WilderAverageIndicator(closePriceIndicator, 3, AverageType.LOSS);
 
 		averageIndicator.getValue(5);
 		averageIndicator.getValue(3);
@@ -57,7 +58,7 @@ public class WilderAverageGainIndicatorTest extends AbstractTest {
 	public void getValueWhenItIsObtainedBySimpleAverage() {
 		// Arrange
 		ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
-		WilderAverageIndicator averageIndicator = new WilderAverageIndicator(closePriceIndicator, 3, AverageType.GAIN);
+		WilderAverageIndicator averageIndicator = new WilderAverageIndicator(closePriceIndicator, 3, AverageType.LOSS);
 
 		// Act
 		Decimal average = averageIndicator.getValue(3);
@@ -70,7 +71,7 @@ public class WilderAverageGainIndicatorTest extends AbstractTest {
 	public void getValueWhenItIsObtainedBySimpleAverageAndOtherIndexesWereRetrieved() {
 		// Arrange
 		ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
-		WilderAverageIndicator averageIndicator = new WilderAverageIndicator(closePriceIndicator, 3, AverageType.GAIN);
+		WilderAverageIndicator averageIndicator = new WilderAverageIndicator(closePriceIndicator, 3, AverageType.LOSS);
 
 		averageIndicator.getValue(5);
 		averageIndicator.getValue(3);
@@ -87,10 +88,10 @@ public class WilderAverageGainIndicatorTest extends AbstractTest {
 	public void getValueWhenItIsObtainedByExponencialAverage() {
 		// Arrange
 		ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
-		WilderAverageIndicator averageIndicator = new WilderAverageIndicator(closePriceIndicator, 3, AverageType.GAIN);
+		WilderAverageIndicator averageIndicator = new WilderAverageIndicator(closePriceIndicator, 3, AverageType.LOSS);
 
 		// Act
-		Decimal average = averageIndicator.getValue(7);
+		Decimal average = averageIndicator.getValue(8);
 
 		// Assert
 		Assert.assertEquals(Decimal.THREE, average);
@@ -100,14 +101,14 @@ public class WilderAverageGainIndicatorTest extends AbstractTest {
 	public void getValueWhenItIsObtainedByExponencialAverageAndOtherIndexesWereRetrieved() {
 		// Arrange
 		ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
-		WilderAverageIndicator averageIndicator = new WilderAverageIndicator(closePriceIndicator, 3, AverageType.GAIN);
+		WilderAverageIndicator averageIndicator = new WilderAverageIndicator(closePriceIndicator, 3, AverageType.LOSS);
 
 		averageIndicator.getValue(12);
 		averageIndicator.getValue(1);
-		averageIndicator.getValue(9);
+		averageIndicator.getValue(10);
 
 		// Act
-		Decimal average = averageIndicator.getValue(7);
+		Decimal average = averageIndicator.getValue(8);
 
 		// Assert
 		Assert.assertEquals(Decimal.THREE, average);

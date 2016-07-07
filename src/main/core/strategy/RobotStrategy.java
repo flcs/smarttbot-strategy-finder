@@ -10,7 +10,7 @@ import eu.verdelhan.ta4j.TimeSeries;
 import eu.verdelhan.ta4j.Trade;
 import eu.verdelhan.ta4j.TradingRecord;
 import eu.verdelhan.ta4j.indicators.simple.ClosePriceIndicator;
-import main.core.parameter.RobotParameters;
+import main.core.parameters.RobotParameters;
 
 public class RobotStrategy {
 	private static final Decimal NumberOfContracts = Decimal.valueOf(1);

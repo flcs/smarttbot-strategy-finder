@@ -1,4 +1,4 @@
-package test.core;
+package test.strategy;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -11,17 +11,18 @@ import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.Order.OrderType;
 import eu.verdelhan.ta4j.TimeSeries;
 import eu.verdelhan.ta4j.Trade;
-import main.core.parameter.BollingerBandsParameters;
-import main.core.parameter.DayTradeParameters;
-import main.core.parameter.EntryParameters;
-import main.core.parameter.ExitParameters;
-import main.core.parameter.MovingAverageParameters;
-import main.core.parameter.RSIParameters;
-import main.core.parameter.RobotParameters;
+import main.core.parameters.BollingerBandsParameters;
+import main.core.parameters.DayTradeParameters;
+import main.core.parameters.EntryParameters;
+import main.core.parameters.ExitParameters;
+import main.core.parameters.MovingAverageParameters;
+import main.core.parameters.RSIParameters;
+import main.core.parameters.RobotParameters;
 import main.core.strategy.RobotStrategy;
-import test.core.helpers.PriceSeries;
-import test.core.helpers.PriceType;
-import test.core.helpers.TimeSeriesHelper;
+import test.AbstractTest;
+import test.helpers.PriceSeries;
+import test.helpers.PriceType;
+import test.helpers.TimeSeriesHelper;
 
 public class RobotStrategyTest extends AbstractTest {
 
@@ -344,7 +345,7 @@ public class RobotStrategyTest extends AbstractTest {
 	}
 
 	@Test
-	public void fixedStopLossOnABuyingTrade() {
+	public void fixedStopLossInABuyingTrade() {
 		// Arrange
 		int[] closePrices = { 50, 51, 49, 52, 51, 52, 49, 43, 42, 41, 38, 35, 41, 51, 50 };
 		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closePrices);
@@ -370,7 +371,7 @@ public class RobotStrategyTest extends AbstractTest {
 	}
 
 	@Test
-	public void fixedStopLossOnASellingTrade() {
+	public void fixedStopLossInASellingTrade() {
 		// Arrange
 		int[] closePrices = { 50, 49, 51, 48, 49, 48, 51, 57, 58, 59, 62, 65, 59, 49, 50 };
 		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closePrices);

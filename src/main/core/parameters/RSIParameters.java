@@ -1,4 +1,4 @@
-package main.core.parameter;
+package main.core.parameters;
 
 public class RSIParameters {
 	private final int periods;

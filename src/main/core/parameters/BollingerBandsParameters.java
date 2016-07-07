@@ -1,4 +1,4 @@
-package main.core.parameter;
+package main.core.parameters;
 
 import eu.verdelhan.ta4j.Decimal;
 

@@ -1,4 +1,4 @@
-package test.core.helpers;
+package test.helpers;
 
 import java.util.ArrayList;
 import java.util.List;

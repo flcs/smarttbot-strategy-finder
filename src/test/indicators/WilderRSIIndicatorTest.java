@@ -1,4 +1,4 @@
-package test.core;
+package test.indicators;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -7,10 +7,11 @@ import org.junit.Test;
 import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.TimeSeries;
 import eu.verdelhan.ta4j.indicators.simple.ClosePriceIndicator;
-import main.core.indicator.WilderRSIIndicator;
-import test.core.helpers.PriceSeries;
-import test.core.helpers.PriceType;
-import test.core.helpers.TimeSeriesHelper;
+import main.core.indicators.WilderRSIIndicator;
+import test.AbstractTest;
+import test.helpers.PriceSeries;
+import test.helpers.PriceType;
+import test.helpers.TimeSeriesHelper;
 
 public class WilderRSIIndicatorTest extends AbstractTest {
 	private static TimeSeries series;

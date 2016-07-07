@@ -1,4 +1,4 @@
-package main.core.indicator;
+package main.core.indicators;
 
 import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.Indicator;
