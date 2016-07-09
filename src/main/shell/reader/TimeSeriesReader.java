@@ -30,7 +30,7 @@ public class TimeSeriesReader {
 	public static TimeSeries read(String filename) throws IOException {
 		List<Tick> ticks = new ArrayList<>();
 
-		Files.lines(Paths.get(filename)).forEach(line -> {
+		Files.lines(Paths.get(filename)).forEachOrdered(line -> {
 			String[] tickData = line.split(",");
 
 			DateTime endTime = DateTime.parse(tickData[DATE_TIME], FORMATTER).plus(DEFAULT_PERIOD);
