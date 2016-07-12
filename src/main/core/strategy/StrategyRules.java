@@ -4,6 +4,8 @@ import java.time.LocalTime;
 
 import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.Rule;
+import eu.verdelhan.ta4j.Strategy;
+import eu.verdelhan.ta4j.TradingRecord;
 import eu.verdelhan.ta4j.indicators.simple.ClosePriceIndicator;
 import eu.verdelhan.ta4j.indicators.statistics.StandardDeviationIndicator;
 import eu.verdelhan.ta4j.indicators.trackers.SMAIndicator;
@@ -31,16 +33,24 @@ public class StrategyRules {
 	private final ClosePriceIndicator prices;
 	private final RobotParameters parameters;
 
+	private final Strategy buyStrategy;
+	private final Strategy sellStrategy;
+
 	private Rule buyEntryRule;
 	private Rule buyExitRule;
 	private Rule sellEntryRule;
 	private Rule sellExitRule;
+
+	private AbsoluteStopLossRule stopLossRule;
 
 	public StrategyRules(ClosePriceIndicator prices, RobotParameters parameters) {
 		this.prices = prices;
 		this.parameters = parameters;
 
 		this.setRules();
+
+		buyStrategy = new Strategy(buyEntryRule, buyExitRule);
+		sellStrategy = new Strategy(sellEntryRule, sellExitRule);
 	}
 
 	private void setRules() {
@@ -149,10 +159,7 @@ public class StrategyRules {
 			return;
 
 		if (fixedStopLoss.getType() == StopType.ABSOLUTE) {
-			AbsoluteStopLossRule stopLossRule = new AbsoluteStopLossRule(prices, fixedStopLoss.getValue());
-
-			buyExitRule = buyExitRule == null ? stopLossRule : buyExitRule.or(stopLossRule);
-			sellExitRule = sellExitRule == null ? stopLossRule : sellExitRule.or(stopLossRule);
+			stopLossRule = new AbsoluteStopLossRule(prices, fixedStopLoss.getValue());
 		} else {
 			// Ta4j framework has a limitation and doesn't consider if it is a buying or a selling trade.
 			// Because of this, we need to use stop gain as a stop loss in a selling trade.
@@ -164,20 +171,28 @@ public class StrategyRules {
 		}
 	}
 
-	public Rule getBuyEntryRule() {
-		return buyEntryRule;
+	public Decimal buyOperate(int index, TradingRecord tradingRecord) {
+		if (stopLossRule != null && stopLossRule.isSatisfied(index, tradingRecord)) {
+			return stopLossRule.getExitPrice(tradingRecord);
+		}
+
+		if (buyStrategy.shouldOperate(index, tradingRecord)) {
+			return prices.getValue(index);
+		}
+
+		return null;
 	}
 
-	public Rule getBuyExitRule() {
-		return buyExitRule;
-	}
+	public Decimal sellOperate(int index, TradingRecord tradingRecord) {
+		if (stopLossRule != null && stopLossRule.isSatisfied(index, tradingRecord)) {
+			return stopLossRule.getExitPrice(tradingRecord);
+		}
+		
+		if (sellStrategy.shouldOperate(index, tradingRecord)) {
+			return prices.getValue(index);
+		}
 
-	public Rule getSellEntryRule() {
-		return sellEntryRule;
-	}
-
-	public Rule getSellExitRule() {
-		return sellExitRule;
+		return null;
 	}
 
 }

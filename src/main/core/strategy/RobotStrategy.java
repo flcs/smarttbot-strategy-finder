@@ -5,7 +5,6 @@ import java.util.List;
 
 import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.Order.OrderType;
-import eu.verdelhan.ta4j.Strategy;
 import eu.verdelhan.ta4j.TimeSeries;
 import eu.verdelhan.ta4j.Trade;
 import eu.verdelhan.ta4j.TradingRecord;
@@ -19,14 +18,10 @@ public class RobotStrategy {
 		ClosePriceIndicator closePrices = new ClosePriceIndicator(series);
 		StrategyRules rules = new StrategyRules(closePrices, parameters);
 
-		Strategy buyStrategy = new Strategy(rules.getBuyEntryRule(), rules.getBuyExitRule());
-		Strategy sellStrategy = new Strategy(rules.getSellEntryRule(), rules.getSellExitRule());
-
-		return run(series, buyStrategy, sellStrategy, parameters);
+		return run(series, rules, parameters);
 	}
 
-	private static List<Trade> run(TimeSeries series, Strategy buyStrategy, Strategy sellStrategy,
-			RobotParameters param) {
+	private static List<Trade> run(TimeSeries series, StrategyRules rules, RobotParameters param) {
 		List<Trade> trades = new ArrayList<>();
 
 		TradingRecord buyingRecord = new TradingRecord(OrderType.BUY);
@@ -36,20 +31,20 @@ public class RobotStrategy {
 		boolean sold = false;
 
 		for (int i = series.getBegin(); i < series.getEnd(); i++) {
-			boolean buyOperate = buyStrategy.shouldOperate(i, buyingRecord);
-			boolean sellOperate = sellStrategy.shouldOperate(i, sellingRecord);
+			Decimal buyOperate = rules.buyOperate(i, buyingRecord);
+			Decimal sellOperate = rules.sellOperate(i, sellingRecord);
 
-			if (buyOperate && !bought && sellOperate && !sold)
-				buyOperate = sellOperate = false;
+			if (buyOperate != null && !bought && sellOperate != null && !sold)
+				buyOperate = sellOperate = null;
 
-			if (buyOperate) {
-				buyingRecord.operate(i, series.getTick(i).getClosePrice(), NumberOfContracts);
+			if (buyOperate != null) {
+				buyingRecord.operate(i, buyOperate, NumberOfContracts);
 				if (bought)
 					trades.add(buyingRecord.getLastTrade());
 				bought = !bought;
 			}
-			if (sellOperate) {
-				sellingRecord.operate(i, series.getTick(i).getClosePrice(), NumberOfContracts);
+			if (sellOperate != null) {
+				sellingRecord.operate(i, sellOperate, NumberOfContracts);
 				if (sold)
 					trades.add(sellingRecord.getLastTrade());
 				sold = !sold;
