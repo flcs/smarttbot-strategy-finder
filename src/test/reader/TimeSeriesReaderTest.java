@@ -1,4 +1,4 @@
-package test.shell;
+package test.reader;
 
 import java.io.IOException;
 
