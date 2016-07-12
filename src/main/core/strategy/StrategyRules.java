@@ -1,5 +1,7 @@
 package main.core.strategy;
 
+import java.time.LocalTime;
+
 import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.Rule;
 import eu.verdelhan.ta4j.indicators.simple.ClosePriceIndicator;
@@ -13,6 +15,7 @@ import eu.verdelhan.ta4j.trading.rules.StopGainRule;
 import eu.verdelhan.ta4j.trading.rules.StopLossRule;
 import eu.verdelhan.ta4j.trading.rules.UnderIndicatorRule;
 import main.core.indicators.WilderRSIIndicator;
+import main.core.parameters.DayTradeParameters;
 import main.core.parameters.ExitParameters;
 import main.core.parameters.RobotParameters;
 import main.core.parameters.StopType;
@@ -21,6 +24,8 @@ import main.core.parameters.entry.MovingAverageParameters;
 import main.core.parameters.entry.RSIParameters;
 import main.core.parameters.exit.FixedStopLossParameters;
 import main.core.rules.AbsoluteStopLossRule;
+import main.core.rules.AllowOpenRule;
+import main.core.rules.ForceCloseRule;
 
 public class StrategyRules {
 	private final ClosePriceIndicator prices;
@@ -41,6 +46,7 @@ public class StrategyRules {
 	private void setRules() {
 		this.setEntryRules();
 		this.setExitRules();
+		this.setDayTradeRules();
 	}
 
 	private void setEntryRules() {
@@ -51,6 +57,26 @@ public class StrategyRules {
 
 	private void setExitRules() {
 		this.setFixedStopLoss();
+	}
+
+	private void setDayTradeRules() {
+		DayTradeParameters dayTradeParam = parameters.getDayTradeParameters();
+		if (dayTradeParam == null) {
+			return;
+		}
+
+		LocalTime initialEntry = dayTradeParam.getInitialEntryTimeLimit();
+		LocalTime finalEntry = dayTradeParam.getFinalEntryTimeLimit();
+		LocalTime exit = dayTradeParam.getExitTimeLimit();
+
+		Rule allowOpenRule = new AllowOpenRule(prices.getTimeSeries(), initialEntry, finalEntry);
+		Rule forceCloseRule = new ForceCloseRule(prices.getTimeSeries(), exit);
+
+		buyEntryRule = buyEntryRule == null ? allowOpenRule : buyEntryRule.and(allowOpenRule);
+		buyExitRule = buyExitRule == null ? forceCloseRule : buyExitRule.or(forceCloseRule);
+
+		sellEntryRule = sellEntryRule == null ? allowOpenRule : sellEntryRule.and(allowOpenRule);
+		sellExitRule = sellExitRule == null ? forceCloseRule : sellExitRule.or(forceCloseRule);
 	}
 
 	private void setMovingAverageRules() {

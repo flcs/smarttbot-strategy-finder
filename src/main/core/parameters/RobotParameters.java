@@ -1,7 +1,5 @@
 package main.core.parameters;
 
-import eu.verdelhan.ta4j.Tick;
-
 public class RobotParameters {
 	private final EntryParameters entryParameters;
 	private final ExitParameters exitParameters;
@@ -36,14 +34,6 @@ public class RobotParameters {
 
 	public DayTradeParameters getDayTradeParameters() {
 		return dayTradeParameters;
-	}
-
-	public boolean canOpenPosition(Tick tick) {
-		return dayTradeParameters == null || dayTradeParameters.canOpenPosition(tick);
-	}
-
-	public boolean forceClosePosition(Tick tick) {
-		return dayTradeParameters != null && dayTradeParameters.forceClosePosition(tick);
 	}
 
 }

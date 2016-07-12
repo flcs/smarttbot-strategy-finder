@@ -2,8 +2,6 @@ package main.core.parameters;
 
 import java.time.LocalTime;
 
-import eu.verdelhan.ta4j.Tick;
-
 public class DayTradeParameters {
 	private final LocalTime initialEntryTimeLimit;
 	private final LocalTime finalEntryTimeLimit;
@@ -15,26 +13,16 @@ public class DayTradeParameters {
 		this.exitTimeLimit = exitTimeLimit;
 	}
 
-	public boolean canOpenPosition(Tick tick) {
-		boolean validInitialTime = true;
-		boolean validFinalTime = true;
-
-		if (initialEntryTimeLimit != null)
-			validInitialTime = tick.getEndTime().getSecondOfDay() >= initialEntryTimeLimit.toSecondOfDay();
-
-		if (finalEntryTimeLimit != null)
-			validFinalTime = tick.getEndTime().getSecondOfDay() < finalEntryTimeLimit.toSecondOfDay();
-
-		return validInitialTime && validFinalTime;
+	public LocalTime getInitialEntryTimeLimit() {
+		return initialEntryTimeLimit;
 	}
 
-	public boolean forceClosePosition(Tick tick) {
-		boolean forceClosePosition = false;
+	public LocalTime getFinalEntryTimeLimit() {
+		return finalEntryTimeLimit;
+	}
 
-		if (exitTimeLimit != null)
-			forceClosePosition = tick.getEndTime().getSecondOfDay() >= exitTimeLimit.toSecondOfDay();
-
-		return forceClosePosition;
+	public LocalTime getExitTimeLimit() {
+		return exitTimeLimit;
 	}
 
 }
