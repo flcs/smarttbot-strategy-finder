@@ -13,19 +13,16 @@ import eu.verdelhan.ta4j.indicators.trackers.bollinger.BollingerBandsLowerIndica
 import eu.verdelhan.ta4j.indicators.trackers.bollinger.BollingerBandsMiddleIndicator;
 import eu.verdelhan.ta4j.indicators.trackers.bollinger.BollingerBandsUpperIndicator;
 import eu.verdelhan.ta4j.trading.rules.OverIndicatorRule;
-import eu.verdelhan.ta4j.trading.rules.StopGainRule;
-import eu.verdelhan.ta4j.trading.rules.StopLossRule;
 import eu.verdelhan.ta4j.trading.rules.UnderIndicatorRule;
 import main.core.indicators.WilderRSIIndicator;
 import main.core.parameters.DayTradeParameters;
 import main.core.parameters.ExitParameters;
 import main.core.parameters.RobotParameters;
-import main.core.parameters.StopType;
 import main.core.parameters.entry.BollingerBandsParameters;
 import main.core.parameters.entry.MovingAverageParameters;
 import main.core.parameters.entry.RSIParameters;
 import main.core.parameters.exit.FixedStopLossParameters;
-import main.core.rules.AbsoluteStopLossRule;
+import main.core.rules.StopLossRule;
 import main.core.rules.AllowOpenRule;
 import main.core.rules.ForceCloseRule;
 
@@ -41,7 +38,7 @@ public class StrategyRules {
 	private Rule sellEntryRule;
 	private Rule sellExitRule;
 
-	private AbsoluteStopLossRule stopLossRule;
+	private StopLossRule stopLossRule;
 
 	public StrategyRules(ClosePriceIndicator prices, RobotParameters parameters) {
 		this.prices = prices;
@@ -158,17 +155,7 @@ public class StrategyRules {
 		if (fixedStopLoss == null)
 			return;
 
-		if (fixedStopLoss.getType() == StopType.ABSOLUTE) {
-			stopLossRule = new AbsoluteStopLossRule(prices, fixedStopLoss.getValue());
-		} else {
-			// Ta4j framework has a limitation and doesn't consider if it is a buying or a selling trade.
-			// Because of this, we need to use stop gain as a stop loss in a selling trade.
-			StopLossRule stopLossOnBuying = new StopLossRule(prices, fixedStopLoss.getValue());
-			StopGainRule stopLossOnSelling = new StopGainRule(prices, fixedStopLoss.getValue());
-
-			buyExitRule = buyExitRule == null ? stopLossOnBuying : buyExitRule.or(stopLossOnBuying);
-			sellExitRule = sellExitRule == null ? stopLossOnSelling : sellExitRule.or(stopLossOnSelling);
-		}
+		stopLossRule = new StopLossRule(prices, fixedStopLoss.getValue(), fixedStopLoss.getType());
 	}
 
 	public Decimal buyOperate(int index, TradingRecord tradingRecord) {
@@ -187,7 +174,7 @@ public class StrategyRules {
 		if (stopLossRule != null && stopLossRule.isSatisfied(index, tradingRecord)) {
 			return stopLossRule.getExitPrice(tradingRecord);
 		}
-		
+
 		if (sellStrategy.shouldOperate(index, tradingRecord)) {
 			return prices.getValue(index);
 		}

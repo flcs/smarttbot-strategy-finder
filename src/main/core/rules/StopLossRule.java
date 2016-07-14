@@ -8,15 +8,19 @@ import eu.verdelhan.ta4j.Trade;
 import eu.verdelhan.ta4j.TradingRecord;
 import eu.verdelhan.ta4j.indicators.simple.ClosePriceIndicator;
 import eu.verdelhan.ta4j.trading.rules.AbstractRule;
+import main.core.enums.StopType;
 
-public class AbsoluteStopLossRule extends AbstractRule {
+public class StopLossRule extends AbstractRule {
+
+	private final Decimal maxLoss;
+	private final StopType stopType;
 
 	private ClosePriceIndicator closePrice;
-	private Decimal maxLoss;
 
-	public AbsoluteStopLossRule(ClosePriceIndicator closePrice, Decimal maxLoss) {
+	public StopLossRule(ClosePriceIndicator closePrice, Decimal maxLoss, StopType stopType) {
 		this.closePrice = closePrice;
 		this.maxLoss = maxLoss;
+		this.stopType = stopType;
 	}
 
 	@Override
@@ -37,6 +41,10 @@ public class AbsoluteStopLossRule extends AbstractRule {
 				loss = highPrice.minus(entryPrice);
 			}
 
+			if (stopType == StopType.PERCENTAGE) {
+				loss = loss.multipliedBy(Decimal.HUNDRED).dividedBy(entryPrice);
+			}
+
 			satisfied = loss.isGreaterThanOrEqual(maxLoss);
 		}
 
@@ -45,14 +53,23 @@ public class AbsoluteStopLossRule extends AbstractRule {
 
 	public Decimal getExitPrice(TradingRecord tradingRecord) {
 		Order entry = this.getEntryOrder(tradingRecord);
-
-		if (entry != null && entry.getType() == OrderType.BUY) {
-			return entry.getPrice().minus(maxLoss);
-		} else if (entry != null && entry.getType() == OrderType.SELL) {
-			return entry.getPrice().plus(maxLoss);
+		if (entry == null) {
+			return null;
 		}
 
-		return null;
+		Decimal loss = maxLoss;
+		if (stopType == StopType.PERCENTAGE) {
+			loss = loss.multipliedBy(entry.getPrice()).dividedBy(Decimal.HUNDRED);
+		}
+
+		switch (entry.getType()) {
+		case BUY:
+			return entry.getPrice().minus(loss);
+		case SELL:
+			return entry.getPrice().plus(loss);
+		default:
+			return null;
+		}
 	}
 
 	private Order getEntryOrder(TradingRecord tradingRecord) {

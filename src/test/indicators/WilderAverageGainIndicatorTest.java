@@ -7,7 +7,7 @@ import org.junit.Test;
 import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.TimeSeries;
 import eu.verdelhan.ta4j.indicators.simple.ClosePriceIndicator;
-import main.core.indicators.AverageType;
+import main.core.enums.AverageType;
 import main.core.indicators.WilderAverageIndicator;
 import test.AbstractTest;
 import test.helpers.PriceSeries;

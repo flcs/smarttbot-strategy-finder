@@ -8,13 +8,14 @@ import eu.verdelhan.ta4j.Order.OrderType;
 import eu.verdelhan.ta4j.TimeSeries;
 import eu.verdelhan.ta4j.TradingRecord;
 import eu.verdelhan.ta4j.indicators.simple.ClosePriceIndicator;
-import main.core.rules.AbsoluteStopLossRule;
+import main.core.enums.StopType;
+import main.core.rules.StopLossRule;
 import test.AbstractTest;
 import test.helpers.PriceSeries;
 import test.helpers.PriceType;
 import test.helpers.TimeSeriesHelper;
 
-public class AbsoluteStopLossRuleTest extends AbstractTest {
+public class StopLossRuleTest extends AbstractTest {
 
 	@Test
 	public void testRuleInABuyingTrade() {
@@ -27,7 +28,8 @@ public class AbsoluteStopLossRuleTest extends AbstractTest {
 		TimeSeries series = TimeSeriesHelper.getTimeSeries(lowSeries, closeSeries);
 		ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
 
-		AbsoluteStopLossRule stopLoss = new AbsoluteStopLossRule(closePriceIndicator, Decimal.valueOf(7));
+		StopLossRule stopLoss = new StopLossRule(closePriceIndicator, Decimal.valueOf(7),
+				StopType.ABSOLUTE);
 
 		TradingRecord tradingRecord = new TradingRecord(OrderType.BUY);
 		tradingRecord.operate(7, Decimal.valueOf(43), Decimal.ONE);
@@ -57,7 +59,8 @@ public class AbsoluteStopLossRuleTest extends AbstractTest {
 		TimeSeries series = TimeSeriesHelper.getTimeSeries(lowSeries, closeSeries);
 		ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
 
-		AbsoluteStopLossRule stopLoss = new AbsoluteStopLossRule(closePriceIndicator, Decimal.valueOf(8));
+		StopLossRule stopLoss = new StopLossRule(closePriceIndicator, Decimal.valueOf(8),
+				StopType.ABSOLUTE);
 
 		TradingRecord tradingRecord = new TradingRecord(OrderType.BUY);
 		tradingRecord.operate(7, Decimal.valueOf(43), Decimal.ONE);
@@ -87,7 +90,8 @@ public class AbsoluteStopLossRuleTest extends AbstractTest {
 		TimeSeries series = TimeSeriesHelper.getTimeSeries(highSeries, closeSeries);
 		ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
 
-		AbsoluteStopLossRule stopLoss = new AbsoluteStopLossRule(closePriceIndicator, Decimal.valueOf(7));
+		StopLossRule stopLoss = new StopLossRule(closePriceIndicator, Decimal.valueOf(7),
+				StopType.ABSOLUTE);
 
 		TradingRecord tradingRecord = new TradingRecord(OrderType.SELL);
 		tradingRecord.operate(7, Decimal.valueOf(57), Decimal.ONE);
@@ -117,7 +121,8 @@ public class AbsoluteStopLossRuleTest extends AbstractTest {
 		TimeSeries series = TimeSeriesHelper.getTimeSeries(highSeries, closeSeries);
 		ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
 
-		AbsoluteStopLossRule stopLoss = new AbsoluteStopLossRule(closePriceIndicator, Decimal.valueOf(8));
+		StopLossRule stopLoss = new StopLossRule(closePriceIndicator, Decimal.valueOf(8),
+				StopType.ABSOLUTE);
 
 		TradingRecord tradingRecord = new TradingRecord(OrderType.SELL);
 		tradingRecord.operate(7, Decimal.valueOf(57), Decimal.ONE);

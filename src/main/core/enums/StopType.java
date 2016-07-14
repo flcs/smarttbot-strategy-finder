@@ -1,4 +1,4 @@
-package main.core.parameters;
+package main.core.enums;
 
 public enum StopType {
 	ABSOLUTE, PERCENTAGE

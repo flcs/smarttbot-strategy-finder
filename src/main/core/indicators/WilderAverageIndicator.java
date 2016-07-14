@@ -5,6 +5,7 @@ import eu.verdelhan.ta4j.Indicator;
 import eu.verdelhan.ta4j.indicators.CachedIndicator;
 import eu.verdelhan.ta4j.indicators.helpers.AverageGainIndicator;
 import eu.verdelhan.ta4j.indicators.helpers.AverageLossIndicator;
+import main.core.enums.AverageType;
 
 public class WilderAverageIndicator extends CachedIndicator<Decimal> {
 	private static final String IlegalTypeMessage = "Average type should be either GAIN or LOSS";

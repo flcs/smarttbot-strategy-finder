@@ -1,7 +1,7 @@
 package main.core.parameters.exit;
 
 import eu.verdelhan.ta4j.Decimal;
-import main.core.parameters.StopType;
+import main.core.enums.StopType;
 
 public class FixedStopLossParameters {
 

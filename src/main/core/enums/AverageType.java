@@ -1,4 +1,4 @@
-package main.core.indicators;
+package main.core.enums;
 
 public enum AverageType {
 	GAIN, LOSS

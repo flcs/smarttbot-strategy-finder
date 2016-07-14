@@ -3,6 +3,7 @@ package main.core.indicators;
 import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.Indicator;
 import eu.verdelhan.ta4j.indicators.CachedIndicator;
+import main.core.enums.AverageType;
 
 public class WilderRSIIndicator extends CachedIndicator<Decimal> {
 
