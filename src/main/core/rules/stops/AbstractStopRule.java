@@ -1,8 +1,7 @@
-package main.core.rules;
+package main.core.rules.stops;
 
 import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.Order;
-import eu.verdelhan.ta4j.Order.OrderType;
 import eu.verdelhan.ta4j.Tick;
 import eu.verdelhan.ta4j.Trade;
 import eu.verdelhan.ta4j.TradingRecord;
@@ -10,18 +9,22 @@ import eu.verdelhan.ta4j.indicators.simple.ClosePriceIndicator;
 import eu.verdelhan.ta4j.trading.rules.AbstractRule;
 import main.core.enums.StopType;
 
-public class StopLossRule extends AbstractRule {
+public abstract class AbstractStopRule extends AbstractRule {
 
-	private final Decimal maxLoss;
-	private final StopType stopType;
+	protected final Decimal resultLimit;
+	protected final StopType stopType;
 
 	private ClosePriceIndicator closePrice;
 
-	public StopLossRule(ClosePriceIndicator closePrice, Decimal maxLoss, StopType stopType) {
+	public AbstractStopRule(ClosePriceIndicator closePrice, Decimal resultLimit, StopType stopType) {
 		this.closePrice = closePrice;
-		this.maxLoss = maxLoss;
+		this.resultLimit = resultLimit;
 		this.stopType = stopType;
 	}
+
+	protected abstract Decimal getResult(Order entry, Tick tick);
+
+	protected abstract Decimal getExitPrice(Order entry, Decimal result);
 
 	@Override
 	public boolean isSatisfied(int index, TradingRecord tradingRecord) {
@@ -30,22 +33,13 @@ public class StopLossRule extends AbstractRule {
 		Order entry = getEntryOrder(tradingRecord);
 		if (entry != null) {
 			Tick tick = closePrice.getTimeSeries().getTick(index);
-			Decimal entryPrice = entry.getPrice();
-			Decimal loss = Decimal.ZERO;
+			Decimal result = this.getResult(entry, tick);
 
-			if (entry.getType() == OrderType.BUY) {
-				Decimal lowPrice = tick.getMinPrice();
-				loss = entryPrice.minus(lowPrice);
-			} else {
-				Decimal highPrice = tick.getMaxPrice();
-				loss = highPrice.minus(entryPrice);
+			if (this.stopType == StopType.PERCENTAGE) {
+				result = result.multipliedBy(Decimal.HUNDRED).dividedBy(entry.getPrice());
 			}
 
-			if (stopType == StopType.PERCENTAGE) {
-				loss = loss.multipliedBy(Decimal.HUNDRED).dividedBy(entryPrice);
-			}
-
-			satisfied = loss.isGreaterThanOrEqual(maxLoss);
+			satisfied = result.isGreaterThanOrEqual(this.resultLimit);
 		}
 
 		return satisfied;
@@ -54,22 +48,15 @@ public class StopLossRule extends AbstractRule {
 	public Decimal getExitPrice(TradingRecord tradingRecord) {
 		Order entry = this.getEntryOrder(tradingRecord);
 		if (entry == null) {
-			return null;
+			throw new IllegalArgumentException("Trading record must hold a opened trade");
 		}
 
-		Decimal loss = maxLoss;
-		if (stopType == StopType.PERCENTAGE) {
-			loss = loss.multipliedBy(entry.getPrice()).dividedBy(Decimal.HUNDRED);
+		Decimal result = resultLimit;
+		if (this.stopType == StopType.PERCENTAGE) {
+			result = result.multipliedBy(entry.getPrice()).dividedBy(Decimal.HUNDRED);
 		}
-
-		switch (entry.getType()) {
-		case BUY:
-			return entry.getPrice().minus(loss);
-		case SELL:
-			return entry.getPrice().plus(loss);
-		default:
-			return null;
-		}
+		
+		return this.getExitPrice(entry, result);
 	}
 
 	private Order getEntryOrder(TradingRecord tradingRecord) {
@@ -83,5 +70,4 @@ public class StopLossRule extends AbstractRule {
 
 		return null;
 	}
-
 }

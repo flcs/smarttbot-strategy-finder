@@ -22,9 +22,9 @@ import main.core.parameters.entry.BollingerBandsParameters;
 import main.core.parameters.entry.MovingAverageParameters;
 import main.core.parameters.entry.RSIParameters;
 import main.core.parameters.exit.FixedStopLossParameters;
-import main.core.rules.StopLossRule;
 import main.core.rules.AllowOpenRule;
 import main.core.rules.ForceCloseRule;
+import main.core.rules.stops.FixedStopLossRule;
 
 public class StrategyRules {
 	private final ClosePriceIndicator prices;
@@ -38,7 +38,7 @@ public class StrategyRules {
 	private Rule sellEntryRule;
 	private Rule sellExitRule;
 
-	private StopLossRule stopLossRule;
+	private FixedStopLossRule stopLossRule;
 
 	public StrategyRules(ClosePriceIndicator prices, RobotParameters parameters) {
 		this.prices = prices;
@@ -155,7 +155,7 @@ public class StrategyRules {
 		if (fixedStopLoss == null)
 			return;
 
-		stopLossRule = new StopLossRule(prices, fixedStopLoss.getValue(), fixedStopLoss.getType());
+		stopLossRule = new FixedStopLossRule(prices, fixedStopLoss.getValue(), fixedStopLoss.getType());
 	}
 
 	public Decimal buyOperate(int index, TradingRecord tradingRecord) {

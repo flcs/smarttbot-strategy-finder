@@ -10,7 +10,7 @@ import eu.verdelhan.ta4j.TimeSeries;
 import eu.verdelhan.ta4j.TradingRecord;
 import eu.verdelhan.ta4j.indicators.simple.ClosePriceIndicator;
 import main.core.enums.StopType;
-import main.core.rules.StopLossRule;
+import main.core.rules.stops.FixedStopLossRule;
 import test.AbstractTest;
 import test.helpers.PriceSeries;
 import test.helpers.PriceType;
@@ -37,7 +37,7 @@ public class StopLossRuleTest extends AbstractTest {
 	@Test
 	public void stopLossInABuyingTrade() {
 		// Arrange
-		StopLossRule stopLoss = new StopLossRule(closePriceIndicator, Decimal.valueOf(8), StopType.ABSOLUTE);
+		FixedStopLossRule stopLoss = new FixedStopLossRule(closePriceIndicator, Decimal.valueOf(8), StopType.ABSOLUTE);
 
 		TradingRecord tradingRecord = new TradingRecord(OrderType.BUY);
 		tradingRecord.operate(1, Decimal.valueOf(50), Decimal.ONE);
@@ -58,7 +58,7 @@ public class StopLossRuleTest extends AbstractTest {
 	@Test
 	public void stopLossInABuyingTradeAchievingTheStopLossExactlyAtLowPrice() {
 		// Arrange
-		StopLossRule stopLoss = new StopLossRule(closePriceIndicator, Decimal.valueOf(5), StopType.ABSOLUTE);
+		FixedStopLossRule stopLoss = new FixedStopLossRule(closePriceIndicator, Decimal.valueOf(5), StopType.ABSOLUTE);
 
 		TradingRecord tradingRecord = new TradingRecord(OrderType.BUY);
 		tradingRecord.operate(1, Decimal.valueOf(50), Decimal.ONE);
@@ -79,7 +79,7 @@ public class StopLossRuleTest extends AbstractTest {
 	@Test
 	public void stopLossInASellingTrade() {
 		// Arrange
-		StopLossRule stopLoss = new StopLossRule(closePriceIndicator, Decimal.valueOf(8), StopType.ABSOLUTE);
+		FixedStopLossRule stopLoss = new FixedStopLossRule(closePriceIndicator, Decimal.valueOf(8), StopType.ABSOLUTE);
 
 		TradingRecord tradingRecord = new TradingRecord(OrderType.SELL);
 		tradingRecord.operate(1, Decimal.valueOf(50), Decimal.ONE);
@@ -100,7 +100,7 @@ public class StopLossRuleTest extends AbstractTest {
 	@Test
 	public void stopLossInASellingTradeAchievingTheStopLossExactlyAtHighPrice() {
 		// Arrange
-		StopLossRule stopLoss = new StopLossRule(closePriceIndicator, Decimal.valueOf(5), StopType.ABSOLUTE);
+		FixedStopLossRule stopLoss = new FixedStopLossRule(closePriceIndicator, Decimal.valueOf(5), StopType.ABSOLUTE);
 
 		TradingRecord tradingRecord = new TradingRecord(OrderType.SELL);
 		tradingRecord.operate(1, Decimal.valueOf(50), Decimal.ONE);
