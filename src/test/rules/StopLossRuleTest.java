@@ -1,6 +1,7 @@
 package test.rules;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import eu.verdelhan.ta4j.Decimal;
@@ -17,127 +18,104 @@ import test.helpers.TimeSeriesHelper;
 
 public class StopLossRuleTest extends AbstractTest {
 
-	@Test
-	public void testRuleInABuyingTrade() {
-		// Arrange
-		int[] lowPrices = { 50, 51, 49, 52, 50, 52, 48, 42, 42, 37, 35, 33, 37, 45, 49 };
-		int[] closePrices = { 50, 51, 49, 52, 51, 52, 49, 43, 42, 41, 38, 35, 41, 51, 50 };
+	private static ClosePriceIndicator closePriceIndicator;
 
-		PriceSeries lowSeries = new PriceSeries(PriceType.LOW, lowPrices);
-		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closePrices);
-		TimeSeries series = TimeSeriesHelper.getTimeSeries(lowSeries, closeSeries);
-		ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
-
-		StopLossRule stopLoss = new StopLossRule(closePriceIndicator, Decimal.valueOf(7),
-				StopType.ABSOLUTE);
-
-		TradingRecord tradingRecord = new TradingRecord(OrderType.BUY);
-		tradingRecord.operate(7, Decimal.valueOf(43), Decimal.ONE);
-
-		// Act & Assert
-		Assert.assertFalse(stopLoss.isSatisfied(8, tradingRecord));
-		Assert.assertFalse(stopLoss.isSatisfied(9, tradingRecord));
-
-		Assert.assertTrue(stopLoss.isSatisfied(10, tradingRecord));
-		Assert.assertEquals(Decimal.valueOf(36), stopLoss.getExitPrice(tradingRecord));
-		tradingRecord.operate(10, Decimal.valueOf(36), Decimal.ONE);
-
-		Assert.assertFalse(stopLoss.isSatisfied(11, tradingRecord));
-		Assert.assertFalse(stopLoss.isSatisfied(12, tradingRecord));
-		Assert.assertFalse(stopLoss.isSatisfied(13, tradingRecord));
-		Assert.assertFalse(stopLoss.isSatisfied(14, tradingRecord));
-	}
-
-	@Test
-	public void testRuleInABuyingTradeAchievingTheStopLossExactlyInTheClosingPrice() {
-		// Arrange
-		int[] lowPrices = { 50, 51, 49, 52, 50, 52, 48, 42, 42, 37, 35, 33, 37, 45, 49 };
-		int[] closePrices = { 50, 51, 49, 52, 51, 52, 49, 43, 42, 41, 38, 35, 41, 51, 50 };
-
-		PriceSeries lowSeries = new PriceSeries(PriceType.LOW, lowPrices);
-		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closePrices);
-		TimeSeries series = TimeSeriesHelper.getTimeSeries(lowSeries, closeSeries);
-		ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
-
-		StopLossRule stopLoss = new StopLossRule(closePriceIndicator, Decimal.valueOf(8),
-				StopType.ABSOLUTE);
-
-		TradingRecord tradingRecord = new TradingRecord(OrderType.BUY);
-		tradingRecord.operate(7, Decimal.valueOf(43), Decimal.ONE);
-
-		// Act & Assert
-		Assert.assertFalse(stopLoss.isSatisfied(8, tradingRecord));
-		Assert.assertFalse(stopLoss.isSatisfied(9, tradingRecord));
-
-		Assert.assertTrue(stopLoss.isSatisfied(10, tradingRecord));
-		Assert.assertEquals(Decimal.valueOf(35), stopLoss.getExitPrice(tradingRecord));
-		tradingRecord.operate(10, Decimal.valueOf(35), Decimal.ONE);
-
-		Assert.assertFalse(stopLoss.isSatisfied(11, tradingRecord));
-		Assert.assertFalse(stopLoss.isSatisfied(12, tradingRecord));
-		Assert.assertFalse(stopLoss.isSatisfied(13, tradingRecord));
-		Assert.assertFalse(stopLoss.isSatisfied(14, tradingRecord));
-	}
-
-	@Test
-	public void testRuleInASellingTrade() {
-		// Arrange
-		int[] highPrices = { 50, 49, 51, 48, 50, 48, 52, 58, 58, 63, 65, 67, 63, 55, 51 };
-		int[] closePrices = { 50, 49, 51, 48, 49, 48, 51, 57, 58, 59, 62, 65, 59, 49, 50 };
+	@BeforeClass
+	public static void setupClosingPrices() {
+		int[] highPrices = { 52, 54, 51, 55, 59, 54 };
+		int[] lowPrices = { 48, 46, 49, 45, 41, 46 };
+		int[] closePrices = { 51, 50, 51, 49, 51, 53 };
 
 		PriceSeries highSeries = new PriceSeries(PriceType.HIGH, highPrices);
+		PriceSeries lowSeries = new PriceSeries(PriceType.LOW, lowPrices);
 		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closePrices);
-		TimeSeries series = TimeSeriesHelper.getTimeSeries(highSeries, closeSeries);
-		ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
 
-		StopLossRule stopLoss = new StopLossRule(closePriceIndicator, Decimal.valueOf(7),
-				StopType.ABSOLUTE);
-
-		TradingRecord tradingRecord = new TradingRecord(OrderType.SELL);
-		tradingRecord.operate(7, Decimal.valueOf(57), Decimal.ONE);
-
-		// Act & Assert
-		Assert.assertFalse(stopLoss.isSatisfied(8, tradingRecord));
-		Assert.assertFalse(stopLoss.isSatisfied(9, tradingRecord));
-
-		Assert.assertTrue(stopLoss.isSatisfied(10, tradingRecord));
-		Assert.assertEquals(Decimal.valueOf(64), stopLoss.getExitPrice(tradingRecord));
-		tradingRecord.operate(10, Decimal.valueOf(64), Decimal.ONE);
-
-		Assert.assertFalse(stopLoss.isSatisfied(11, tradingRecord));
-		Assert.assertFalse(stopLoss.isSatisfied(12, tradingRecord));
-		Assert.assertFalse(stopLoss.isSatisfied(13, tradingRecord));
-		Assert.assertFalse(stopLoss.isSatisfied(14, tradingRecord));
+		TimeSeries series = TimeSeriesHelper.getTimeSeries(highSeries, lowSeries, closeSeries);
+		closePriceIndicator = new ClosePriceIndicator(series);
 	}
 
 	@Test
-	public void testRuleInASellingTradeAchievingTheStopLossExactlyInTheClosingPrice() {
+	public void stopLossInABuyingTrade() {
 		// Arrange
-		int[] highPrices = { 50, 49, 51, 48, 50, 48, 52, 58, 58, 63, 65, 67, 63, 55, 51 };
-		int[] closePrices = { 50, 49, 51, 48, 49, 48, 51, 57, 58, 59, 62, 65, 59, 49, 50 };
+		StopLossRule stopLoss = new StopLossRule(closePriceIndicator, Decimal.valueOf(8), StopType.ABSOLUTE);
 
-		PriceSeries highSeries = new PriceSeries(PriceType.HIGH, highPrices);
-		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closePrices);
-		TimeSeries series = TimeSeriesHelper.getTimeSeries(highSeries, closeSeries);
-		ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
-
-		StopLossRule stopLoss = new StopLossRule(closePriceIndicator, Decimal.valueOf(8),
-				StopType.ABSOLUTE);
-
-		TradingRecord tradingRecord = new TradingRecord(OrderType.SELL);
-		tradingRecord.operate(7, Decimal.valueOf(57), Decimal.ONE);
+		TradingRecord tradingRecord = new TradingRecord(OrderType.BUY);
+		tradingRecord.operate(1, Decimal.valueOf(50), Decimal.ONE);
 
 		// Act & Assert
-		Assert.assertFalse(stopLoss.isSatisfied(8, tradingRecord));
-		Assert.assertFalse(stopLoss.isSatisfied(9, tradingRecord));
+		Assert.assertFalse(stopLoss.isSatisfied(0, tradingRecord));
+		Assert.assertFalse(stopLoss.isSatisfied(1, tradingRecord));
+		Assert.assertFalse(stopLoss.isSatisfied(2, tradingRecord));
+		Assert.assertFalse(stopLoss.isSatisfied(3, tradingRecord));
 
-		Assert.assertTrue(stopLoss.isSatisfied(10, tradingRecord));
-		Assert.assertEquals(Decimal.valueOf(65), stopLoss.getExitPrice(tradingRecord));
-		tradingRecord.operate(10, Decimal.valueOf(65), Decimal.ONE);
+		Assert.assertTrue(stopLoss.isSatisfied(4, tradingRecord));
+		Assert.assertEquals(Decimal.valueOf(42), stopLoss.getExitPrice(tradingRecord));
+		tradingRecord.operate(4, Decimal.valueOf(42), Decimal.ONE);
 
-		Assert.assertFalse(stopLoss.isSatisfied(11, tradingRecord));
-		Assert.assertFalse(stopLoss.isSatisfied(12, tradingRecord));
-		Assert.assertFalse(stopLoss.isSatisfied(13, tradingRecord));
-		Assert.assertFalse(stopLoss.isSatisfied(14, tradingRecord));
+		Assert.assertFalse(stopLoss.isSatisfied(5, tradingRecord));
 	}
+
+	@Test
+	public void stopLossInABuyingTradeAchievingTheStopLossExactlyAtLowPrice() {
+		// Arrange
+		StopLossRule stopLoss = new StopLossRule(closePriceIndicator, Decimal.valueOf(5), StopType.ABSOLUTE);
+
+		TradingRecord tradingRecord = new TradingRecord(OrderType.BUY);
+		tradingRecord.operate(1, Decimal.valueOf(50), Decimal.ONE);
+
+		// Act & Assert
+		Assert.assertFalse(stopLoss.isSatisfied(0, tradingRecord));
+		Assert.assertFalse(stopLoss.isSatisfied(1, tradingRecord));
+		Assert.assertFalse(stopLoss.isSatisfied(2, tradingRecord));
+
+		Assert.assertTrue(stopLoss.isSatisfied(3, tradingRecord));
+		Assert.assertEquals(Decimal.valueOf(45), stopLoss.getExitPrice(tradingRecord));
+		tradingRecord.operate(3, Decimal.valueOf(45), Decimal.ONE);
+
+		Assert.assertFalse(stopLoss.isSatisfied(4, tradingRecord));
+		Assert.assertFalse(stopLoss.isSatisfied(5, tradingRecord));
+	}
+
+	@Test
+	public void stopLossInASellingTrade() {
+		// Arrange
+		StopLossRule stopLoss = new StopLossRule(closePriceIndicator, Decimal.valueOf(8), StopType.ABSOLUTE);
+
+		TradingRecord tradingRecord = new TradingRecord(OrderType.SELL);
+		tradingRecord.operate(1, Decimal.valueOf(50), Decimal.ONE);
+
+		// Act & Assert
+		Assert.assertFalse(stopLoss.isSatisfied(0, tradingRecord));
+		Assert.assertFalse(stopLoss.isSatisfied(1, tradingRecord));
+		Assert.assertFalse(stopLoss.isSatisfied(2, tradingRecord));
+		Assert.assertFalse(stopLoss.isSatisfied(3, tradingRecord));
+
+		Assert.assertTrue(stopLoss.isSatisfied(4, tradingRecord));
+		Assert.assertEquals(Decimal.valueOf(58), stopLoss.getExitPrice(tradingRecord));
+		tradingRecord.operate(4, Decimal.valueOf(58), Decimal.ONE);
+
+		Assert.assertFalse(stopLoss.isSatisfied(5, tradingRecord));
+	}
+
+	@Test
+	public void stopLossInASellingTradeAchievingTheStopLossExactlyAtHighPrice() {
+		// Arrange
+		StopLossRule stopLoss = new StopLossRule(closePriceIndicator, Decimal.valueOf(5), StopType.ABSOLUTE);
+
+		TradingRecord tradingRecord = new TradingRecord(OrderType.SELL);
+		tradingRecord.operate(1, Decimal.valueOf(50), Decimal.ONE);
+
+		// Act & Assert
+		Assert.assertFalse(stopLoss.isSatisfied(0, tradingRecord));
+		Assert.assertFalse(stopLoss.isSatisfied(1, tradingRecord));
+		Assert.assertFalse(stopLoss.isSatisfied(2, tradingRecord));
+
+		Assert.assertTrue(stopLoss.isSatisfied(3, tradingRecord));
+		Assert.assertEquals(Decimal.valueOf(55), stopLoss.getExitPrice(tradingRecord));
+		tradingRecord.operate(3, Decimal.valueOf(55), Decimal.ONE);
+
+		Assert.assertFalse(stopLoss.isSatisfied(4, tradingRecord));
+		Assert.assertFalse(stopLoss.isSatisfied(5, tradingRecord));
+	}
+
 }
