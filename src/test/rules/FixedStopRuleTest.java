@@ -22,7 +22,7 @@ public class FixedStopRuleTest extends AbstractTest {
 	private static ClosePriceIndicator closePriceIndicator;
 
 	@BeforeClass
-	public static void setupClosingPrices() {
+	public static void setupTimeSeries() {
 		int[] highPrices = { 52, 54, 51, 55, 59, 54 };
 		int[] lowPrices = { 48, 46, 49, 45, 41, 46 };
 		int[] closePrices = { 51, 50, 51, 49, 51, 53 };
