@@ -10,19 +10,21 @@ import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.Order.OrderType;
 import eu.verdelhan.ta4j.TimeSeries;
 import eu.verdelhan.ta4j.Trade;
+import main.core.enums.ExitType;
 import main.core.enums.StopType;
 import main.core.parameters.RobotParameters;
 import main.core.parameters.entry.BollingerBandsParameters;
 import main.core.parameters.entry.EntryParameters;
 import main.core.parameters.exit.ExitParameters;
 import main.core.parameters.exit.FixedStopGainParameters;
+import main.core.parameters.exit.FixedStopLossParameters;
 import main.core.strategy.RobotStrategy;
 import test.AbstractTest;
 import test.helpers.PriceSeries;
 import test.helpers.PriceType;
 import test.helpers.TimeSeriesHelper;
 
-public class StopGainTest extends AbstractTest {
+public class IndicatorsExitCriteriaTest extends AbstractTest {
 
 	private static TimeSeries buyingSeries;
 	private static TimeSeries sellingSeries;
@@ -49,10 +51,9 @@ public class StopGainTest extends AbstractTest {
 	}
 
 	@Test
-	public void fixedPercentageStopGainInABuyingTrade() {
+	public void exitTradeIfAnyIndicatorSignals() {
 		// Arrange
-		FixedStopGainParameters stop = new FixedStopGainParameters(StopType.PERCENTAGE, Decimal.valueOf(49));
-		ExitParameters exitParameters = new ExitParameters(null, null, stop);
+		ExitParameters exitParameters = new ExitParameters(ExitType.ANY_INDICATOR, null, null);
 		RobotParameters parameters = new RobotParameters(entryParameters, exitParameters);
 
 		// Act

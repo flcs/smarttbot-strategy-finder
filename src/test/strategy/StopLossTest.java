@@ -52,7 +52,7 @@ public class StopLossTest extends AbstractTest {
 	public void fixedPercentageStopLossInABuyingTrade() {
 		// Arrange
 		FixedStopLossParameters stop = new FixedStopLossParameters(StopType.PERCENTAGE, Decimal.valueOf(16));
-		ExitParameters exitParameters = new ExitParameters(stop, null);
+		ExitParameters exitParameters = new ExitParameters(null, stop, null);
 		RobotParameters parameters = new RobotParameters(entryParameters, exitParameters);
 
 		// Act
@@ -73,7 +73,7 @@ public class StopLossTest extends AbstractTest {
 	public void fixedPercentageStopLossInASellingTrade() {
 		// Arrange
 		FixedStopLossParameters stop = new FixedStopLossParameters(StopType.PERCENTAGE, Decimal.valueOf(12));
-		ExitParameters exitParameters = new ExitParameters(stop, null);
+		ExitParameters exitParameters = new ExitParameters(null, stop, null);
 		RobotParameters parameters = new RobotParameters(entryParameters, exitParameters);
 
 		// Act
@@ -94,7 +94,7 @@ public class StopLossTest extends AbstractTest {
 	public void fixedAbsoluteStopLossInABuyingTrade() {
 		// Arrange
 		FixedStopLossParameters stop = new FixedStopLossParameters(StopType.ABSOLUTE, Decimal.valueOf(7));
-		ExitParameters exitParameters = new ExitParameters(stop, null);
+		ExitParameters exitParameters = new ExitParameters(null, stop, null);
 		RobotParameters parameters = new RobotParameters(entryParameters, exitParameters);
 
 		// Act
@@ -115,7 +115,7 @@ public class StopLossTest extends AbstractTest {
 	public void fixedAbsoluteStopLossInASellingTrade() {
 		// Arrange
 		FixedStopLossParameters stop = new FixedStopLossParameters(StopType.ABSOLUTE, Decimal.valueOf(7));
-		ExitParameters exitParameters = new ExitParameters(stop, null);
+		ExitParameters exitParameters = new ExitParameters(null, stop, null);
 		RobotParameters parameters = new RobotParameters(entryParameters, exitParameters);
 
 		// Act
