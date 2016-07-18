@@ -1,5 +1,9 @@
 package main.core.parameters;
 
+import main.core.parameters.daytrade.DayTradeParameters;
+import main.core.parameters.entry.EntryParameters;
+import main.core.parameters.exit.ExitParameters;
+
 public class RobotParameters {
 	private final EntryParameters entryParameters;
 	private final ExitParameters exitParameters;

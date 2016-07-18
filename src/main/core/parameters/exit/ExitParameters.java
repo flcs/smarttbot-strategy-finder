@@ -1,7 +1,4 @@
-package main.core.parameters;
-
-import main.core.parameters.exit.FixedStopGainParameters;
-import main.core.parameters.exit.FixedStopLossParameters;
+package main.core.parameters.exit;
 
 public class ExitParameters {
 

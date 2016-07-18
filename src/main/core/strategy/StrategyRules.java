@@ -15,12 +15,12 @@ import eu.verdelhan.ta4j.indicators.trackers.bollinger.BollingerBandsUpperIndica
 import eu.verdelhan.ta4j.trading.rules.OverIndicatorRule;
 import eu.verdelhan.ta4j.trading.rules.UnderIndicatorRule;
 import main.core.indicators.WilderRSIIndicator;
-import main.core.parameters.DayTradeParameters;
-import main.core.parameters.ExitParameters;
 import main.core.parameters.RobotParameters;
+import main.core.parameters.daytrade.DayTradeParameters;
 import main.core.parameters.entry.BollingerBandsParameters;
 import main.core.parameters.entry.MovingAverageParameters;
 import main.core.parameters.entry.RSIParameters;
+import main.core.parameters.exit.ExitParameters;
 import main.core.parameters.exit.FixedStopGainParameters;
 import main.core.parameters.exit.FixedStopLossParameters;
 import main.core.rules.AllowOpenRule;
