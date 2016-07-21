@@ -1,4 +1,4 @@
-package main.core.parameters;
+package main.core.parameters.daytrade;
 
 import java.time.LocalTime;
 
