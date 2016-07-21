@@ -29,8 +29,12 @@ public class FixedStopGainRule extends AbstractStopRule {
 	}
 
 	@Override
-	protected Decimal getExitPrice(Order entry, Decimal profit) {
+	protected Decimal getExitPrice(Order entry) {
 		Decimal entryPrice = entry.getPrice();
+		Decimal profit = this.resultLimit;
+		if (this.stopType == StopType.PERCENTAGE) {
+			profit = profit.multipliedBy(entryPrice).dividedBy(Decimal.HUNDRED);
+		}
 
 		switch (entry.getType()) {
 		case BUY:
