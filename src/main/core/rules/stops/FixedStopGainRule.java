@@ -16,16 +16,25 @@ public class FixedStopGainRule extends AbstractStopRule {
 	protected Decimal getResult(Order entry, Tick tick) {
 		Decimal entryPrice = entry.getPrice();
 
+		Decimal gain;
 		switch (entry.getType()) {
 		case BUY:
 			Decimal highPrice = tick.getMaxPrice();
-			return highPrice.minus(entryPrice);
+			gain = highPrice.minus(entryPrice);
+			break;
 		case SELL:
 			Decimal lowPrice = tick.getMinPrice();
-			return entryPrice.minus(lowPrice);
+			gain = entryPrice.minus(lowPrice);
+			break;
 		default:
 			throw new IllegalArgumentException("Entry order must be either a buying order or selling order.");
 		}
+
+		if (this.stopType == StopType.PERCENTAGE) {
+			gain = gain.multipliedBy(Decimal.HUNDRED).dividedBy(entryPrice);
+		}
+
+		return gain;
 	}
 
 	@Override

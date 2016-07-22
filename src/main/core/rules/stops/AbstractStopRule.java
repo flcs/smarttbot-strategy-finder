@@ -35,10 +35,6 @@ public abstract class AbstractStopRule extends AbstractRule {
 			Tick tick = closePrice.getTimeSeries().getTick(index);
 			Decimal result = this.getResult(entry, tick);
 
-			if (this.stopType == StopType.PERCENTAGE) {
-				result = result.multipliedBy(Decimal.HUNDRED).dividedBy(entry.getPrice());
-			}
-
 			satisfied = result.isGreaterThanOrEqual(this.resultLimit);
 		}
 

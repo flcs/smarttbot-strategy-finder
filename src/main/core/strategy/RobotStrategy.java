@@ -39,15 +39,23 @@ public class RobotStrategy {
 
 			if (buyOperate != null) {
 				buyingRecord.operate(i, buyOperate, NumberOfContracts);
-				if (bought)
-					trades.add(buyingRecord.getLastTrade());
 				bought = !bought;
+
+				if (bought) {
+					rules.startNewTrade();
+				} else {
+					trades.add(buyingRecord.getLastTrade());
+				}
 			}
 			if (sellOperate != null) {
 				sellingRecord.operate(i, sellOperate, NumberOfContracts);
-				if (sold)
-					trades.add(sellingRecord.getLastTrade());
 				sold = !sold;
+
+				if (sold) {
+					rules.startNewTrade();
+				} else {
+					trades.add(sellingRecord.getLastTrade());
+				}
 			}
 		}
 

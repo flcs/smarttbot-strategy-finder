@@ -43,16 +43,25 @@ public class TrailingStopRule extends AbstractStopRule {
 			return Decimal.ZERO;
 		}
 
+		Decimal loss;
 		switch (entry.getType()) {
 		case BUY:
 			maxGainPrice = maxGainPrice.max(currentPrice);
-			return maxGainPrice.minus(currentPrice);
+			loss = maxGainPrice.minus(currentPrice);
+			break;
 		case SELL:
 			maxGainPrice = maxGainPrice.min(currentPrice);
-			return currentPrice.minus(maxGainPrice);
+			loss = currentPrice.minus(maxGainPrice);
+			break;
 		default:
 			throw new IllegalArgumentException("Entry order must be either a buying order or selling order.");
 		}
+
+		if (this.stopType == StopType.PERCENTAGE) {
+			loss = loss.multipliedBy(Decimal.HUNDRED).dividedBy(maxGainPrice);
+		}
+
+		return loss;
 	}
 
 	@Override
@@ -61,7 +70,7 @@ public class TrailingStopRule extends AbstractStopRule {
 		if (this.stopType == StopType.PERCENTAGE) {
 			loss = loss.multipliedBy(maxGainPrice).dividedBy(Decimal.HUNDRED);
 		}
-		
+
 		switch (entry.getType()) {
 		case BUY:
 			return maxGainPrice.minus(loss);
@@ -70,6 +79,10 @@ public class TrailingStopRule extends AbstractStopRule {
 		default:
 			throw new IllegalArgumentException("Entry order must be either a buying order or selling order.");
 		}
+	}
+
+	public void startNewTrade() {
+		this.maxGainPrice = Decimal.NaN;
 	}
 
 }
