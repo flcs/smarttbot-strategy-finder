@@ -1,5 +1,5 @@
 package main.core.enums;
 
 public enum ExitType {
-	NO_INIDICATOR, ANY_INDICATOR, ALL_INDICATORS
+	NO_INDICATORS, ANY_INDICATOR, ALL_INDICATORS
 }

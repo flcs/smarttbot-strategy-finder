@@ -1,5 +1,6 @@
 package main.core.parameters;
 
+import main.core.enums.ExitType;
 import main.core.parameters.daytrade.DayTradeParameters;
 import main.core.parameters.entry.EntryParameters;
 import main.core.parameters.exit.ExitParameters;
@@ -10,11 +11,11 @@ public class RobotParameters {
 	private final DayTradeParameters dayTradeParameters;
 
 	public RobotParameters(EntryParameters entryParameters) {
-		this(entryParameters, null, null);
+		this(entryParameters, new ExitParameters(ExitType.ANY_INDICATOR, null, null), null);
 	}
-
+	
 	public RobotParameters(EntryParameters entryParameters, DayTradeParameters dayTradeParameters) {
-		this(entryParameters, null, dayTradeParameters);
+		this(entryParameters, new ExitParameters(ExitType.ANY_INDICATOR, null, null), dayTradeParameters);
 	}
 
 	public RobotParameters(EntryParameters entryParameters, ExitParameters exitParameters) {

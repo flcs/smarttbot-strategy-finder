@@ -84,10 +84,10 @@ public class StrategyRules {
 		Rule forceCloseRule = new ForceCloseRule(prices.getTimeSeries(), exit);
 
 		buyEntryRule = buyEntryRule == null ? allowOpenRule : buyEntryRule.and(allowOpenRule);
-		buyExitRule = buyExitRule == null ? forceCloseRule : buyExitRule.or(forceCloseRule);
+		setBuyExitRule(forceCloseRule);
 
 		sellEntryRule = sellEntryRule == null ? allowOpenRule : sellEntryRule.and(allowOpenRule);
-		sellExitRule = sellExitRule == null ? forceCloseRule : sellExitRule.or(forceCloseRule);
+		setSellExitRule(forceCloseRule);
 	}
 
 	private void setMovingAverageRules() {
@@ -102,10 +102,10 @@ public class StrategyRules {
 		Rule overRule = new OverIndicatorRule(shortSMA, longSMA);
 
 		buyEntryRule = buyEntryRule == null ? underRule : buyEntryRule.and(underRule);
-		buyExitRule = buyExitRule == null ? overRule : buyExitRule.or(overRule);
+		setBuyExitRule(overRule);
 
 		sellEntryRule = sellEntryRule == null ? overRule : sellEntryRule.and(overRule);
-		sellExitRule = sellExitRule == null ? underRule : sellExitRule.or(underRule);
+		setSellExitRule(underRule);
 	}
 
 	private void setRSIRules() {
@@ -122,10 +122,10 @@ public class StrategyRules {
 		Rule overRule = new OverIndicatorRule(rsiIndicator, upperLimit);
 
 		buyEntryRule = buyEntryRule == null ? underRule : buyEntryRule.and(underRule);
-		buyExitRule = buyExitRule == null ? overRule : buyExitRule.or(overRule);
+		setBuyExitRule(overRule);
 
 		sellEntryRule = sellEntryRule == null ? overRule : sellEntryRule.and(overRule);
-		sellExitRule = sellExitRule == null ? underRule : sellExitRule.or(underRule);
+		setSellExitRule(underRule);
 	}
 
 	private void setBBRules() {
@@ -144,10 +144,10 @@ public class StrategyRules {
 		Rule overRule = new OverIndicatorRule(prices, upper);
 
 		buyEntryRule = buyEntryRule == null ? underRule : buyEntryRule.and(underRule);
-		buyExitRule = buyExitRule == null ? overRule : buyExitRule.or(overRule);
+		setBuyExitRule(overRule);
 
 		sellEntryRule = sellEntryRule == null ? overRule : sellEntryRule.and(overRule);
-		sellExitRule = sellExitRule == null ? underRule : sellExitRule.or(underRule);
+		setSellExitRule(underRule);
 	}
 
 	private void setFixedStopLoss() {
@@ -204,6 +204,33 @@ public class StrategyRules {
 		}
 
 		return null;
+	}
+
+	private void setBuyExitRule(Rule exitRule) {
+		switch (parameters.getExitParameters().getExitType()) {
+		case ANY_INDICATOR:
+			buyExitRule = buyExitRule == null ? exitRule : buyExitRule.or(exitRule);
+			break;
+		case ALL_INDICATORS:
+			buyExitRule = buyExitRule == null ? exitRule : buyExitRule.and(exitRule);
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	private void setSellExitRule(Rule exitRule) {
+		switch (parameters.getExitParameters().getExitType()) {
+		case ANY_INDICATOR:
+			sellExitRule = sellExitRule == null ? exitRule : sellExitRule.or(exitRule);
+			break;
+		case ALL_INDICATORS:
+			sellExitRule = sellExitRule == null ? exitRule : sellExitRule.and(exitRule);
+			break;
+		default:
+			break;
+		}
 	}
 
 }
