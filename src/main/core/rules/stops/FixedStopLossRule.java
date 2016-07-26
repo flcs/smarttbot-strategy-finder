@@ -16,21 +16,34 @@ public class FixedStopLossRule extends AbstractStopRule {
 	protected Decimal getResult(Order entry, Tick tick) {
 		Decimal entryPrice = entry.getPrice();
 
+		Decimal loss;
 		switch (entry.getType()) {
 		case BUY:
 			Decimal lowPrice = tick.getMinPrice();
-			return entryPrice.minus(lowPrice);
+			loss = entryPrice.minus(lowPrice);
+			break;
 		case SELL:
 			Decimal highPrice = tick.getMaxPrice();
-			return highPrice.minus(entryPrice);
+			loss = highPrice.minus(entryPrice);
+			break;
 		default:
 			throw new IllegalArgumentException("Entry order must be either a buying order or selling order.");
 		}
+
+		if (this.stopType == StopType.PERCENTAGE) {
+			loss = loss.multipliedBy(Decimal.HUNDRED).dividedBy(entryPrice);
+		}
+
+		return loss;
 	}
 
 	@Override
-	protected Decimal getExitPrice(Order entry, Decimal loss) {
+	protected Decimal getExitPrice(Order entry) {
 		Decimal entryPrice = entry.getPrice();
+		Decimal loss = this.resultLimit;
+		if (this.stopType == StopType.PERCENTAGE) {
+			loss = loss.multipliedBy(entryPrice).dividedBy(Decimal.HUNDRED);
+		}
 
 		switch (entry.getType()) {
 		case BUY:

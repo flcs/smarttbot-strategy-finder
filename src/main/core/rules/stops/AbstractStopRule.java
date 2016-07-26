@@ -24,7 +24,7 @@ public abstract class AbstractStopRule extends AbstractRule {
 
 	protected abstract Decimal getResult(Order entry, Tick tick);
 
-	protected abstract Decimal getExitPrice(Order entry, Decimal result);
+	protected abstract Decimal getExitPrice(Order entry);
 
 	@Override
 	public boolean isSatisfied(int index, TradingRecord tradingRecord) {
@@ -34,10 +34,6 @@ public abstract class AbstractStopRule extends AbstractRule {
 		if (entry != null) {
 			Tick tick = closePrice.getTimeSeries().getTick(index);
 			Decimal result = this.getResult(entry, tick);
-
-			if (this.stopType == StopType.PERCENTAGE) {
-				result = result.multipliedBy(Decimal.HUNDRED).dividedBy(entry.getPrice());
-			}
 
 			satisfied = result.isGreaterThanOrEqual(this.resultLimit);
 		}
@@ -50,13 +46,8 @@ public abstract class AbstractStopRule extends AbstractRule {
 		if (entry == null) {
 			throw new IllegalArgumentException("Trading record must hold a opened trade");
 		}
-
-		Decimal result = resultLimit;
-		if (this.stopType == StopType.PERCENTAGE) {
-			result = result.multipliedBy(entry.getPrice()).dividedBy(Decimal.HUNDRED);
-		}
 		
-		return this.getExitPrice(entry, result);
+		return this.getExitPrice(entry);
 	}
 
 	private Order getEntryOrder(TradingRecord tradingRecord) {

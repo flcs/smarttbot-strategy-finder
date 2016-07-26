@@ -23,10 +23,12 @@ import main.core.parameters.entry.RSIParameters;
 import main.core.parameters.exit.ExitParameters;
 import main.core.parameters.exit.FixedStopGainParameters;
 import main.core.parameters.exit.FixedStopLossParameters;
+import main.core.parameters.exit.TrailingStopGainParameters;
 import main.core.rules.AllowOpenRule;
 import main.core.rules.ForceCloseRule;
 import main.core.rules.stops.FixedStopGainRule;
 import main.core.rules.stops.FixedStopLossRule;
+import main.core.rules.stops.TrailingStopRule;
 
 public class StrategyRules {
 	private final ClosePriceIndicator prices;
@@ -42,6 +44,7 @@ public class StrategyRules {
 
 	private FixedStopLossRule stopLossRule;
 	private FixedStopGainRule stopGainRule;
+	private TrailingStopRule trailingStopRule;
 
 	public StrategyRules(ClosePriceIndicator prices, RobotParameters parameters) {
 		this.prices = prices;
@@ -68,6 +71,7 @@ public class StrategyRules {
 	private void setExitRules() {
 		this.setFixedStopLoss();
 		this.setFixedStopGain();
+		this.setTrailingStop();
 	}
 
 	private void setDayTradeRules() {
@@ -174,6 +178,19 @@ public class StrategyRules {
 		stopGainRule = new FixedStopGainRule(prices, fixedStopGain.getValue(), fixedStopGain.getType());
 	}
 
+	private void setTrailingStop() {
+		ExitParameters exitParam = parameters.getExitParameters();
+		if (exitParam == null)
+			return;
+
+		TrailingStopGainParameters trailingStop = exitParam.getTrailingStopGain();
+		if (trailingStop == null)
+			return;
+
+		trailingStopRule = new TrailingStopRule(prices, trailingStop.getTrigger(), trailingStop.getDistance(),
+				trailingStop.getType());
+	}
+
 	public Decimal buyOperate(int index, TradingRecord tradingRecord) {
 		if (stopLossRule != null && stopLossRule.isSatisfied(index, tradingRecord)) {
 			return stopLossRule.getExitPrice(tradingRecord);
@@ -181,6 +198,10 @@ public class StrategyRules {
 
 		if (stopGainRule != null && stopGainRule.isSatisfied(index, tradingRecord)) {
 			return stopGainRule.getExitPrice(tradingRecord);
+		}
+
+		if (trailingStopRule != null && trailingStopRule.isSatisfied(index, tradingRecord)) {
+			return trailingStopRule.getExitPrice(tradingRecord);
 		}
 
 		if (buyStrategy.shouldOperate(index, tradingRecord)) {
@@ -197,6 +218,10 @@ public class StrategyRules {
 
 		if (stopGainRule != null && stopGainRule.isSatisfied(index, tradingRecord)) {
 			return stopGainRule.getExitPrice(tradingRecord);
+		}
+
+		if (trailingStopRule != null && trailingStopRule.isSatisfied(index, tradingRecord)) {
+			return trailingStopRule.getExitPrice(tradingRecord);
 		}
 
 		if (sellStrategy.shouldOperate(index, tradingRecord)) {
@@ -230,6 +255,12 @@ public class StrategyRules {
 			break;
 		default:
 			break;
+		}
+	}
+	
+	public void startNewTrade() {
+		if (trailingStopRule != null) {
+			this.trailingStopRule.startNewTrade();
 		}
 	}
 
