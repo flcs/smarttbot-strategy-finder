@@ -3,6 +3,7 @@ package main.core.strategy;
 import java.time.LocalTime;
 
 import eu.verdelhan.ta4j.Decimal;
+import eu.verdelhan.ta4j.Indicator;
 import eu.verdelhan.ta4j.Rule;
 import eu.verdelhan.ta4j.Strategy;
 import eu.verdelhan.ta4j.TradingRecord;
@@ -14,6 +15,7 @@ import eu.verdelhan.ta4j.indicators.trackers.bollinger.BollingerBandsMiddleIndic
 import eu.verdelhan.ta4j.indicators.trackers.bollinger.BollingerBandsUpperIndicator;
 import eu.verdelhan.ta4j.trading.rules.OverIndicatorRule;
 import eu.verdelhan.ta4j.trading.rules.UnderIndicatorRule;
+import main.core.indicators.EMAIndicator;
 import main.core.indicators.WilderRSIIndicator;
 import main.core.parameters.RobotParameters;
 import main.core.parameters.daytrade.DayTradeParameters;
@@ -99,11 +101,26 @@ public class StrategyRules {
 		if (param == null)
 			return;
 
-		SMAIndicator shortSMA = new SMAIndicator(prices, param.getShortPeriods());
-		SMAIndicator longSMA = new SMAIndicator(prices, param.getLongPeriods());
+		Indicator<Decimal> shortMovingAverage;
+		Indicator<Decimal> longMovingAverage;
 
-		Rule underRule = new UnderIndicatorRule(shortSMA, longSMA);
-		Rule overRule = new OverIndicatorRule(shortSMA, longSMA);
+		switch (param.getType()) {
+		case SIMPLE:
+			shortMovingAverage = new SMAIndicator(prices, param.getShortPeriods());
+			longMovingAverage = new SMAIndicator(prices, param.getLongPeriods());
+			break;
+
+		case EXPONENTIAL:
+			shortMovingAverage = new EMAIndicator(prices, param.getShortPeriods());
+			longMovingAverage = new EMAIndicator(prices, param.getLongPeriods());
+			break;
+
+		default:
+			throw new IllegalArgumentException("Invalid moving average type");
+		}
+
+		Rule underRule = new UnderIndicatorRule(shortMovingAverage, longMovingAverage);
+		Rule overRule = new OverIndicatorRule(shortMovingAverage, longMovingAverage);
 
 		buyEntryRule = buyEntryRule == null ? underRule : buyEntryRule.and(underRule);
 		setBuyExitRule(overRule);
@@ -257,7 +274,7 @@ public class StrategyRules {
 			break;
 		}
 	}
-	
+
 	public void startNewTrade() {
 		if (trailingStopRule != null) {
 			this.trailingStopRule.startNewTrade();
