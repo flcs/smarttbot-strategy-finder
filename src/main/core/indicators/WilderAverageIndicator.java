@@ -8,7 +8,7 @@ import eu.verdelhan.ta4j.indicators.helpers.AverageLossIndicator;
 import main.core.enums.AverageType;
 
 public class WilderAverageIndicator extends CachedIndicator<Decimal> {
-	private static final String IlegalTypeMessage = "Average type should be either GAIN or LOSS";
+	private static final String IllegalTypeMessage = "Average type should be either GAIN or LOSS";
 
 	private final Indicator<Decimal> indicator;
 	private final int timeFrame;
@@ -38,7 +38,7 @@ public class WilderAverageIndicator extends CachedIndicator<Decimal> {
 			} else if (type == AverageType.LOSS) {
 				return new AverageLossIndicator(indicator, timeFrame).getValue(index);
 			} else {
-				throw new IllegalArgumentException(IlegalTypeMessage);
+				throw new IllegalArgumentException(IllegalTypeMessage);
 			}
 		}
 
@@ -50,7 +50,7 @@ public class WilderAverageIndicator extends CachedIndicator<Decimal> {
 		} else if (type == AverageType.LOSS) {
 			gainLoss = change.multipliedBy(Decimal.valueOf(-1));
 		} else {
-			throw new IllegalArgumentException(IlegalTypeMessage);
+			throw new IllegalArgumentException(IllegalTypeMessage);
 		}
 
 		gainLoss = gainLoss.max(Decimal.ZERO);
