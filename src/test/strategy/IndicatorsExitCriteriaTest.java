@@ -155,7 +155,7 @@ public class IndicatorsExitCriteriaTest extends AbstractTest {
 		Assert.assertEquals(OrderType.SELL, trade1.getExit().getType());
 		Assert.assertEquals(Decimal.valueOf(30), trade1.getExit().getPrice());
 		
-		Assert.assertEquals(2, trades.size());
+		Assert.assertEquals(1, trades.size());
 	}
 
 }

@@ -34,8 +34,12 @@ public class RobotStrategy {
 			Decimal buyOperate = rules.buyOperate(i, buyingRecord);
 			Decimal sellOperate = rules.sellOperate(i, sellingRecord);
 
-			if (buyOperate != null && !bought && sellOperate != null && !sold)
+			boolean newBuyPosition = bought ^ buyOperate != null;
+			boolean newSellPosition = sold ^ sellOperate != null;
+
+			if (newBuyPosition && newSellPosition) {
 				buyOperate = sellOperate = null;
+			}
 
 			if (buyOperate != null) {
 				buyingRecord.operate(i, buyOperate, NumberOfContracts);
