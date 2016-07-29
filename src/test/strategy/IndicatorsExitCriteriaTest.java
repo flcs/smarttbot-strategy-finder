@@ -29,7 +29,7 @@ public class IndicatorsExitCriteriaTest extends AbstractTest {
 
 	@BeforeClass
 	public static void setupTimeSeries() {
-		int[] closePrices = { 50, 49, 50, 51, 49, 46, 40, 45, 63, 20, 45, 43, 42, 60, 55, 30 };
+		int[] closePrices = { 50, 49, 50, 51, 49, 46, 40, 45, 63, 20, 45, 43, 42, 60, 55, 33, 33, 35, 50, 36 };
 		PriceSeries closeSeries = new PriceSeries(PriceType.CLOSE, closePrices);
 		timeSeries = TimeSeriesHelper.getTimeSeries(closeSeries);
 
@@ -82,9 +82,18 @@ public class IndicatorsExitCriteriaTest extends AbstractTest {
 
 		Assert.assertEquals(15, trade4.getExit().getIndex());
 		Assert.assertEquals(OrderType.BUY, trade4.getExit().getType());
-		Assert.assertEquals(Decimal.valueOf(30), trade4.getExit().getPrice());
-		
-		Assert.assertEquals(4, trades.size());
+		Assert.assertEquals(Decimal.valueOf(33), trade4.getExit().getPrice());
+
+		Trade trade5 = trades.get(4);
+		Assert.assertEquals(16, trade5.getEntry().getIndex());
+		Assert.assertEquals(OrderType.BUY, trade5.getEntry().getType());
+		Assert.assertEquals(Decimal.valueOf(33), trade5.getEntry().getPrice());
+
+		Assert.assertEquals(19, trade5.getExit().getIndex());
+		Assert.assertEquals(OrderType.SELL, trade5.getExit().getType());
+		Assert.assertEquals(Decimal.valueOf(36), trade5.getExit().getPrice());
+
+		Assert.assertEquals(5, trades.size());
 	}
 
 	@Test
@@ -123,19 +132,28 @@ public class IndicatorsExitCriteriaTest extends AbstractTest {
 		Assert.assertEquals(13, trade3.getExit().getIndex());
 		Assert.assertEquals(OrderType.SELL, trade3.getExit().getType());
 		Assert.assertEquals(Decimal.valueOf(60), trade3.getExit().getPrice());
-		
+
 		Trade trade4 = trades.get(3);
 		Assert.assertEquals(13, trade4.getEntry().getIndex());
 		Assert.assertEquals(OrderType.SELL, trade4.getEntry().getType());
 		Assert.assertEquals(Decimal.valueOf(60), trade4.getEntry().getPrice());
 
-		Assert.assertEquals(15, trade4.getExit().getIndex());
+		Assert.assertEquals(16, trade4.getExit().getIndex());
 		Assert.assertEquals(OrderType.BUY, trade4.getExit().getType());
-		Assert.assertEquals(Decimal.valueOf(30), trade4.getExit().getPrice());
+		Assert.assertEquals(Decimal.valueOf(33), trade4.getExit().getPrice());
 		
-		Assert.assertEquals(4, trades.size());
+		Trade trade5 = trades.get(4);
+		Assert.assertEquals(16, trade5.getEntry().getIndex());
+		Assert.assertEquals(OrderType.BUY, trade5.getEntry().getType());
+		Assert.assertEquals(Decimal.valueOf(33), trade5.getEntry().getPrice());
+
+		Assert.assertEquals(19, trade5.getExit().getIndex());
+		Assert.assertEquals(OrderType.SELL, trade5.getExit().getType());
+		Assert.assertEquals(Decimal.valueOf(36), trade5.getExit().getPrice());
+
+		Assert.assertEquals(5, trades.size());
 	}
-	
+
 	@Test
 	public void doNotExitTradeIfAnyIndicatorsSignals() {
 		// Arrange
@@ -151,10 +169,10 @@ public class IndicatorsExitCriteriaTest extends AbstractTest {
 		Assert.assertEquals(OrderType.BUY, trade1.getEntry().getType());
 		Assert.assertEquals(Decimal.valueOf(46), trade1.getEntry().getPrice());
 
-		Assert.assertEquals(15, trade1.getExit().getIndex());
+		Assert.assertEquals(19, trade1.getExit().getIndex());
 		Assert.assertEquals(OrderType.SELL, trade1.getExit().getType());
-		Assert.assertEquals(Decimal.valueOf(30), trade1.getExit().getPrice());
-		
+		Assert.assertEquals(Decimal.valueOf(36), trade1.getExit().getPrice());
+
 		Assert.assertEquals(1, trades.size());
 	}
 
