@@ -28,6 +28,7 @@ import main.core.parameters.exit.FixedStopLossParameters;
 import main.core.parameters.exit.TrailingStopGainParameters;
 import main.core.rules.AllowOpenRule;
 import main.core.rules.ForceCloseRule;
+import main.core.rules.NoExitRule;
 import main.core.rules.stops.FixedStopGainRule;
 import main.core.rules.stops.FixedStopLossRule;
 import main.core.rules.stops.TrailingStopRule;
@@ -256,6 +257,9 @@ public class StrategyRules {
 		case ALL_INDICATORS:
 			buyExitRule = buyExitRule == null ? exitRule : buyExitRule.and(exitRule);
 			break;
+		case NO_INDICATORS:
+			buyExitRule = new NoExitRule();
+			break;
 		default:
 			break;
 		}
@@ -269,6 +273,9 @@ public class StrategyRules {
 			break;
 		case ALL_INDICATORS:
 			sellExitRule = sellExitRule == null ? exitRule : sellExitRule.and(exitRule);
+			break;
+		case NO_INDICATORS:
+			sellExitRule = new NoExitRule();
 			break;
 		default:
 			break;

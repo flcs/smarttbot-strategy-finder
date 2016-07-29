@@ -10,17 +10,12 @@ import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.Order.OrderType;
 import eu.verdelhan.ta4j.TimeSeries;
 import eu.verdelhan.ta4j.Trade;
-import eu.verdelhan.ta4j.indicators.trackers.SMAIndicator;
 import main.core.enums.ExitType;
-import main.core.enums.StopType;
 import main.core.parameters.RobotParameters;
-import main.core.parameters.entry.BollingerBandsParameters;
 import main.core.parameters.entry.EntryParameters;
 import main.core.parameters.entry.MovingAverageParameters;
 import main.core.parameters.entry.RSIParameters;
 import main.core.parameters.exit.ExitParameters;
-import main.core.parameters.exit.FixedStopGainParameters;
-import main.core.parameters.exit.FixedStopLossParameters;
 import main.core.strategy.RobotStrategy;
 import test.AbstractTest;
 import test.helpers.PriceSeries;
@@ -93,7 +88,7 @@ public class IndicatorsExitCriteriaTest extends AbstractTest {
 	}
 
 	@Test
-	public void exitTradeIfAllIndicatorstorsSignals() {
+	public void exitTradeIfAllIndicatorsSignals() {
 		// Arrange
 		ExitParameters exitParameters = new ExitParameters(ExitType.ALL_INDICATORS, null, null);
 		RobotParameters parameters = new RobotParameters(entryParameters, exitParameters);
@@ -139,6 +134,28 @@ public class IndicatorsExitCriteriaTest extends AbstractTest {
 		Assert.assertEquals(Decimal.valueOf(30), trade4.getExit().getPrice());
 		
 		Assert.assertEquals(4, trades.size());
+	}
+	
+	@Test
+	public void doNotExitTradeIfAnyIndicatorsSignals() {
+		// Arrange
+		ExitParameters exitParameters = new ExitParameters(ExitType.NO_INDICATORS, null, null);
+		RobotParameters parameters = new RobotParameters(entryParameters, exitParameters);
+
+		// Act
+		List<Trade> trades = RobotStrategy.backtest(timeSeries, parameters);
+
+		// Assert
+		Trade trade1 = trades.get(0);
+		Assert.assertEquals(5, trade1.getEntry().getIndex());
+		Assert.assertEquals(OrderType.BUY, trade1.getEntry().getType());
+		Assert.assertEquals(Decimal.valueOf(46), trade1.getEntry().getPrice());
+
+		Assert.assertEquals(15, trade1.getExit().getIndex());
+		Assert.assertEquals(OrderType.SELL, trade1.getExit().getType());
+		Assert.assertEquals(Decimal.valueOf(30), trade1.getExit().getPrice());
+		
+		Assert.assertEquals(2, trades.size());
 	}
 
 }
