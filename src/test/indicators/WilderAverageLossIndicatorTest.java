@@ -85,7 +85,7 @@ public class WilderAverageLossIndicatorTest extends AbstractTest {
 	}
 
 	@Test
-	public void getValueWhenItIsObtainedByExponencialAverage() {
+	public void getValueWhenItIsObtainedByExponentialAverage() {
 		// Arrange
 		ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
 		WilderAverageIndicator averageIndicator = new WilderAverageIndicator(closePriceIndicator, 3, AverageType.LOSS);
@@ -98,7 +98,7 @@ public class WilderAverageLossIndicatorTest extends AbstractTest {
 	}
 
 	@Test
-	public void getValueWhenItIsObtainedByExponencialAverageAndOtherIndexesWereRetrieved() {
+	public void getValueWhenItIsObtainedByExponentialAverageAndOtherIndexesWereRetrieved() {
 		// Arrange
 		ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
 		WilderAverageIndicator averageIndicator = new WilderAverageIndicator(closePriceIndicator, 3, AverageType.LOSS);

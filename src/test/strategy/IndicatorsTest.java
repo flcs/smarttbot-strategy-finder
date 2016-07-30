@@ -92,7 +92,7 @@ public class IndicatorsTest extends AbstractTest {
 	}
 
 	@Test
-	public void backtestExponencialMovingAverage() {
+	public void backtestExponentialMovingAverage() {
 		// Arrange
 		MovingAverageParameters movingAverage = new MovingAverageParameters(MovingAverageType.EXPONENTIAL, 3, 6);
 		EntryParameters entryParameters = new EntryParameters(movingAverage, null, null);
