@@ -105,19 +105,30 @@ public class StrategyRules {
 		Indicator<Decimal> shortMovingAverage;
 		Indicator<Decimal> longMovingAverage;
 
-		switch (param.getType()) {
+		switch (param.getShortType()) {
 		case SIMPLE:
 			shortMovingAverage = new SMAIndicator(prices, param.getShortPeriods());
-			longMovingAverage = new SMAIndicator(prices, param.getLongPeriods());
 			break;
 
 		case EXPONENTIAL:
 			shortMovingAverage = new EMAIndicator(prices, param.getShortPeriods());
+			break;
+
+		default:
+			throw new IllegalArgumentException("Invalid moving average short type");
+		}
+
+		switch (param.getLongType()) {
+		case SIMPLE:
+			longMovingAverage = new SMAIndicator(prices, param.getLongPeriods());
+			break;
+
+		case EXPONENTIAL:
 			longMovingAverage = new EMAIndicator(prices, param.getLongPeriods());
 			break;
 
 		default:
-			throw new IllegalArgumentException("Invalid moving average type");
+			throw new IllegalArgumentException("Invalid moving average long type");
 		}
 
 		Rule underRule = new UnderIndicatorRule(shortMovingAverage, longMovingAverage);

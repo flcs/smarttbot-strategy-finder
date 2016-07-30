@@ -4,7 +4,8 @@ import main.core.enums.MovingAverageType;
 
 public class MovingAverageParameters {
 
-	private final MovingAverageType type;
+	private final MovingAverageType shortType;
+	private final MovingAverageType longType;
 	private final int shortPeriods;
 	private final int longPeriods;
 
@@ -12,14 +13,24 @@ public class MovingAverageParameters {
 		this(MovingAverageType.SIMPLE, shortPeriods, longPeriods);
 	}
 
-	public MovingAverageParameters(MovingAverageType type, int shortPeriods, int longPeriods) {
-		this.type = type;
+	public MovingAverageParameters(MovingAverageType shortType, MovingAverageType longType, int shortPeriods,
+			int longPeriods) {
+		this.shortType = shortType;
+		this.longType = longType;
 		this.shortPeriods = shortPeriods;
 		this.longPeriods = longPeriods;
 	}
 
-	public MovingAverageType getType() {
-		return type;
+	public MovingAverageParameters(MovingAverageType type, int shortPeriods, int longPeriods) {
+		this(type, type, shortPeriods, longPeriods);
+	}
+
+	public MovingAverageType getShortType() {
+		return shortType;
+	}
+
+	public MovingAverageType getLongType() {
+		return longType;
 	}
 
 	public int getShortPeriods() {

@@ -161,6 +161,124 @@ public class IndicatorsTest extends AbstractTest {
 	}
 
 	@Test
+	public void backtestWithShortSimpleMovingAverageAndLongExponentialMovingAverage() {
+		// Arrange
+		MovingAverageParameters movingAverage = new MovingAverageParameters(MovingAverageType.SIMPLE,
+				MovingAverageType.EXPONENTIAL, 3, 6);
+		EntryParameters entryParameters = new EntryParameters(movingAverage, null, null);
+		RobotParameters parameters = new RobotParameters(entryParameters);
+
+		// Act
+		List<Trade> trades = RobotStrategy.backtest(movingAverageSeries, parameters);
+
+		// Assert
+		Trade trade1 = trades.get(0);
+		Assert.assertEquals(3, trade1.getEntry().getIndex());
+		Assert.assertEquals(OrderType.SELL, trade1.getEntry().getType());
+		Assert.assertEquals(Decimal.valueOf(51), trade1.getEntry().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade1.getEntry().getAmount());
+
+		Assert.assertEquals(4, trade1.getExit().getIndex());
+		Assert.assertEquals(OrderType.BUY, trade1.getExit().getType());
+		Assert.assertEquals(Decimal.valueOf(47), trade1.getExit().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade1.getExit().getAmount());
+
+		Trade trade2 = trades.get(1);
+		Assert.assertEquals(4, trade2.getEntry().getIndex());
+		Assert.assertEquals(OrderType.BUY, trade2.getEntry().getType());
+		Assert.assertEquals(Decimal.valueOf(47), trade2.getEntry().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade2.getEntry().getAmount());
+
+		Assert.assertEquals(5, trade2.getExit().getIndex());
+		Assert.assertEquals(OrderType.SELL, trade2.getExit().getType());
+		Assert.assertEquals(Decimal.valueOf(63), trade2.getExit().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade2.getExit().getAmount());
+
+		Trade trade3 = trades.get(2);
+		Assert.assertEquals(5, trade3.getEntry().getIndex());
+		Assert.assertEquals(OrderType.SELL, trade3.getEntry().getType());
+		Assert.assertEquals(Decimal.valueOf(63), trade3.getEntry().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade3.getEntry().getAmount());
+
+		Assert.assertEquals(9, trade3.getExit().getIndex());
+		Assert.assertEquals(OrderType.BUY, trade3.getExit().getType());
+		Assert.assertEquals(Decimal.valueOf(50), trade3.getExit().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade3.getExit().getAmount());
+
+		Assert.assertEquals(3, trades.size());
+	}
+
+	@Test
+	public void backtestWithShortExponentialMovingAverageAndLongSimpleMovingAverage() {
+		// Arrange
+		MovingAverageParameters movingAverage = new MovingAverageParameters(MovingAverageType.EXPONENTIAL,
+				MovingAverageType.SIMPLE, 3, 6);
+		EntryParameters entryParameters = new EntryParameters(movingAverage, null, null);
+		RobotParameters parameters = new RobotParameters(entryParameters);
+
+		// Act
+		List<Trade> trades = RobotStrategy.backtest(movingAverageSeries, parameters);
+
+		// Assert
+		Trade trade1 = trades.get(0);
+		Assert.assertEquals(3, trade1.getEntry().getIndex());
+		Assert.assertEquals(OrderType.SELL, trade1.getEntry().getType());
+		Assert.assertEquals(Decimal.valueOf(51), trade1.getEntry().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade1.getEntry().getAmount());
+
+		Assert.assertEquals(4, trade1.getExit().getIndex());
+		Assert.assertEquals(OrderType.BUY, trade1.getExit().getType());
+		Assert.assertEquals(Decimal.valueOf(47), trade1.getExit().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade1.getExit().getAmount());
+
+		Trade trade2 = trades.get(1);
+		Assert.assertEquals(4, trade2.getEntry().getIndex());
+		Assert.assertEquals(OrderType.BUY, trade2.getEntry().getType());
+		Assert.assertEquals(Decimal.valueOf(47), trade2.getEntry().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade2.getEntry().getAmount());
+
+		Assert.assertEquals(5, trade2.getExit().getIndex());
+		Assert.assertEquals(OrderType.SELL, trade2.getExit().getType());
+		Assert.assertEquals(Decimal.valueOf(63), trade2.getExit().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade2.getExit().getAmount());
+
+		Trade trade3 = trades.get(2);
+		Assert.assertEquals(5, trade3.getEntry().getIndex());
+		Assert.assertEquals(OrderType.SELL, trade3.getEntry().getType());
+		Assert.assertEquals(Decimal.valueOf(63), trade3.getEntry().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade3.getEntry().getAmount());
+
+		Assert.assertEquals(6, trade3.getExit().getIndex());
+		Assert.assertEquals(OrderType.BUY, trade3.getExit().getType());
+		Assert.assertEquals(Decimal.valueOf(45), trade3.getExit().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade3.getExit().getAmount());
+
+		Trade trade4 = trades.get(3);
+		Assert.assertEquals(6, trade4.getEntry().getIndex());
+		Assert.assertEquals(OrderType.BUY, trade4.getEntry().getType());
+		Assert.assertEquals(Decimal.valueOf(45), trade4.getEntry().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade4.getEntry().getAmount());
+
+		Assert.assertEquals(8, trade4.getExit().getIndex());
+		Assert.assertEquals(OrderType.SELL, trade4.getExit().getType());
+		Assert.assertEquals(Decimal.valueOf(70), trade4.getExit().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade4.getExit().getAmount());
+
+		Trade trade5 = trades.get(4);
+		Assert.assertEquals(8, trade5.getEntry().getIndex());
+		Assert.assertEquals(OrderType.SELL, trade5.getEntry().getType());
+		Assert.assertEquals(Decimal.valueOf(70), trade5.getEntry().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade5.getEntry().getAmount());
+
+		Assert.assertEquals(9, trade5.getExit().getIndex());
+		Assert.assertEquals(OrderType.BUY, trade5.getExit().getType());
+		Assert.assertEquals(Decimal.valueOf(50), trade5.getExit().getPrice());
+		Assert.assertEquals(Decimal.valueOf(1), trade5.getExit().getAmount());
+
+		Assert.assertEquals(5, trades.size());
+	}
+
+	@Test
 	public void backtestRSI() {
 		// Arrange
 		int[] closingPrices = { 15, 16, 31, 24, 3, 16, 17, 17, 21, 24, 23, 19, 16, 20 };
