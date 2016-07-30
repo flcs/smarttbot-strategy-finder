@@ -81,6 +81,8 @@ public class IndicatorsTest extends AbstractTest {
 		Assert.assertEquals(OrderType.SELL, trade4.getExit().getType());
 		Assert.assertEquals(Decimal.valueOf(8), trade4.getExit().getPrice());
 		Assert.assertEquals(Decimal.valueOf(1), trade4.getExit().getAmount());
+
+		Assert.assertEquals(4, trades.size());
 	}
 
 	@Test
@@ -141,6 +143,8 @@ public class IndicatorsTest extends AbstractTest {
 		Assert.assertEquals(OrderType.SELL, trade4.getExit().getType());
 		Assert.assertEquals(Decimal.valueOf(13), trade4.getExit().getPrice());
 		Assert.assertEquals(Decimal.valueOf(1), trade4.getExit().getAmount());
+
+		Assert.assertEquals(4, trades.size());
 	}
 
 	@Test
@@ -201,6 +205,8 @@ public class IndicatorsTest extends AbstractTest {
 		Assert.assertEquals(OrderType.SELL, trade4.getExit().getType());
 		Assert.assertEquals(Decimal.valueOf(20), trade4.getExit().getPrice());
 		Assert.assertEquals(Decimal.valueOf(1), trade4.getExit().getAmount());
+
+		Assert.assertEquals(4, trades.size());
 	}
 
 	@Test
@@ -250,6 +256,8 @@ public class IndicatorsTest extends AbstractTest {
 		Assert.assertEquals(OrderType.BUY, trade3.getExit().getType());
 		Assert.assertEquals(Decimal.valueOf(15), trade3.getExit().getPrice());
 		Assert.assertEquals(Decimal.valueOf(1), trade3.getExit().getAmount());
+
+		Assert.assertEquals(3, trades.size());
 	}
 
 	@Test
@@ -301,6 +309,8 @@ public class IndicatorsTest extends AbstractTest {
 		Assert.assertEquals(OrderType.SELL, trade3.getExit().getType());
 		Assert.assertEquals(Decimal.valueOf(42), trade3.getExit().getPrice());
 		Assert.assertEquals(Decimal.valueOf(1), trade3.getExit().getAmount());
+
+		Assert.assertEquals(3, trades.size());
 	}
 
 }

@@ -71,6 +71,8 @@ public class TimeLimitTest extends AbstractTest {
 
 		Assert.assertEquals(7, trade1.getExit().getIndex());
 		Assert.assertEquals(OrderType.SELL, trade1.getExit().getType());
+
+		Assert.assertEquals(1, trades.size());
 	}
 
 	@Test
@@ -119,6 +121,8 @@ public class TimeLimitTest extends AbstractTest {
 
 		Assert.assertEquals(6, trade1.getExit().getIndex());
 		Assert.assertEquals(OrderType.BUY, trade1.getExit().getType());
+
+		Assert.assertEquals(1, trades.size());
 	}
 
 }
