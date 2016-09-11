@@ -1,3 +1,3 @@
-# trading-robot-java
+#SmarttBot Strategy Finder
 
-This is an app to backtest different trading strategies.
+This is an application to find different trading strategies for SmarttBot trading system.
