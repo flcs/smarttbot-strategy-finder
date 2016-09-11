@@ -1,11 +1,13 @@
 package core.parameters;
 
+import core.definitions.Individual;
 import core.enums.ExitType;
 import core.parameters.daytrade.DayTradeParameters;
 import core.parameters.entry.EntryParameters;
 import core.parameters.exit.ExitParameters;
 
-public class RobotParameters {
+public class RobotParameters implements Individual<RobotParameters> {
+
 	private final EntryParameters entryParameters;
 	private final ExitParameters exitParameters;
 	private final DayTradeParameters dayTradeParameters;
@@ -27,6 +29,11 @@ public class RobotParameters {
 		this.entryParameters = entryParameters;
 		this.exitParameters = exitParameters;
 		this.dayTradeParameters = dayTradeParameters;
+	}
+
+	@Override
+	public int compareTo(RobotParameters o) {
+		return 0;
 	}
 
 	public EntryParameters getEntryParameters() {

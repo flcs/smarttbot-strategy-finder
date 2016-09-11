@@ -10,9 +10,13 @@ import eu.verdelhan.ta4j.TimeSeries;
 import eu.verdelhan.ta4j.Trade;
 import eu.verdelhan.ta4j.TradingRecord;
 import eu.verdelhan.ta4j.indicators.simple.ClosePriceIndicator;
+import shell.global.GlobalSettings;
 
 public class RobotStrategy {
-	private static final Decimal NumberOfContracts = Decimal.valueOf(1);
+
+	public static List<Trade> backtest(RobotParameters parameters) {
+		return backtest(GlobalSettings.timeSeries(), parameters);
+	}
 
 	public static List<Trade> backtest(TimeSeries series, RobotParameters parameters) {
 		ClosePriceIndicator closePrices = new ClosePriceIndicator(series);
@@ -42,7 +46,7 @@ public class RobotStrategy {
 			}
 
 			if (buyOperate != null) {
-				buyingRecord.operate(i, buyOperate, NumberOfContracts);
+				buyingRecord.operate(i, buyOperate, GlobalSettings.numberOfContracts());
 				bought = !bought;
 
 				if (bought) {
@@ -52,7 +56,7 @@ public class RobotStrategy {
 				}
 			}
 			if (sellOperate != null) {
-				sellingRecord.operate(i, sellOperate, NumberOfContracts);
+				sellingRecord.operate(i, sellOperate, GlobalSettings.numberOfContracts());
 				sold = !sold;
 
 				if (sold) {
@@ -64,12 +68,14 @@ public class RobotStrategy {
 		}
 
 		if (bought) {
-			buyingRecord.operate(series.getEnd(), series.getTick(series.getEnd()).getClosePrice(), NumberOfContracts);
+			buyingRecord.operate(series.getEnd(), series.getTick(series.getEnd()).getClosePrice(),
+					GlobalSettings.numberOfContracts());
 			trades.add(buyingRecord.getLastTrade());
 		}
 
 		if (sold) {
-			sellingRecord.operate(series.getEnd(), series.getTick(series.getEnd()).getClosePrice(), NumberOfContracts);
+			sellingRecord.operate(series.getEnd(), series.getTick(series.getEnd()).getClosePrice(),
+					GlobalSettings.numberOfContracts());
 			trades.add(sellingRecord.getLastTrade());
 		}
 
