@@ -1,4 +1,4 @@
-package test.reader;
+package test.io;
 
 import java.io.IOException;
 
@@ -9,10 +9,10 @@ import org.junit.Test;
 import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.Tick;
 import eu.verdelhan.ta4j.TimeSeries;
-import main.shell.reader.TimeSeriesReader;
+import main.shell.io.TimeSeriesIO;
 import test.AbstractTest;
 
-public class TimeSeriesReaderTest extends AbstractTest {
+public class TimeSeriesIOTest extends AbstractTest {
 
 	@Test
 	public void readSampleData() throws IOException {
@@ -20,7 +20,7 @@ public class TimeSeriesReaderTest extends AbstractTest {
 		String filename = "src/test/SampleData.csv";
 
 		// Act
-		TimeSeries timeSeries = TimeSeriesReader.read(filename);
+		TimeSeries timeSeries = TimeSeriesIO.read(filename);
 
 		// Assert
 		Tick tick1 = timeSeries.getTick(0);

@@ -1,4 +1,4 @@
-package main.shell.reader;
+package main.shell.io;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,7 +15,7 @@ import eu.verdelhan.ta4j.Decimal;
 import eu.verdelhan.ta4j.Tick;
 import eu.verdelhan.ta4j.TimeSeries;
 
-public class TimeSeriesReader {
+public class TimeSeriesIO {
 	private static final int DATE_TIME = 0;
 	private static final int OPEN = 1;
 	private static final int HIGH = 2;
