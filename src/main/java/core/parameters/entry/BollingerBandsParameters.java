@@ -1,10 +1,15 @@
 package core.parameters.entry;
 
+import core.definitions.Chromosome;
 import eu.verdelhan.ta4j.Decimal;
 
-public class BollingerBandsParameters {
-	private final int periods;
-	private final Decimal factor;
+public class BollingerBandsParameters implements Chromosome {
+
+	private int periods;
+	private Decimal factor;
+
+	public BollingerBandsParameters() {
+	}
 
 	public BollingerBandsParameters(int periods, Decimal factor) {
 		this.periods = periods;

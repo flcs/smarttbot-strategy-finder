@@ -1,13 +1,17 @@
 package core.parameters.entry;
 
+import core.definitions.Chromosome;
 import core.enums.MovingAverageType;
 
-public class MovingAverageParameters {
+public class MovingAverageParameters implements Chromosome {
 
-	private final MovingAverageType shortType;
-	private final MovingAverageType longType;
-	private final int shortPeriods;
-	private final int longPeriods;
+	private MovingAverageType shortType;
+	private MovingAverageType longType;
+	private int shortPeriods;
+	private int longPeriods;
+
+	public MovingAverageParameters() {
+	}
 
 	public MovingAverageParameters(int shortPeriods, int longPeriods) {
 		this(MovingAverageType.SIMPLE, shortPeriods, longPeriods);

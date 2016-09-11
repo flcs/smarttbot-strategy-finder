@@ -2,10 +2,16 @@ package core.parameters.daytrade;
 
 import java.time.LocalTime;
 
-public class DayTradeParameters {
-	private final LocalTime initialEntryTimeLimit;
-	private final LocalTime finalEntryTimeLimit;
-	private final LocalTime exitTimeLimit;
+import core.definitions.Chromosome;
+
+public class DayTradeParameters implements Chromosome {
+
+	private LocalTime initialEntryTimeLimit;
+	private LocalTime finalEntryTimeLimit;
+	private LocalTime exitTimeLimit;
+
+	public DayTradeParameters() {
+	}
 
 	public DayTradeParameters(LocalTime initialEntryTimeLimit, LocalTime finalEntryTimeLimit, LocalTime exitTimeLimit) {
 		this.initialEntryTimeLimit = initialEntryTimeLimit;

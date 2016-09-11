@@ -8,9 +8,12 @@ import core.parameters.exit.ExitParameters;
 
 public class RobotParameters implements Individual<RobotParameters> {
 
-	private final EntryParameters entryParameters;
-	private final ExitParameters exitParameters;
-	private final DayTradeParameters dayTradeParameters;
+	private EntryParameters entryParameters;
+	private ExitParameters exitParameters;
+	private DayTradeParameters dayTradeParameters;
+
+	public RobotParameters() {
+	}
 
 	public RobotParameters(EntryParameters entryParameters) {
 		this(entryParameters, new ExitParameters(ExitType.ANY_INDICATOR, null, null), null);

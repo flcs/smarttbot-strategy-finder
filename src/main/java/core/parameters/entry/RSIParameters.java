@@ -1,9 +1,15 @@
 package core.parameters.entry;
 
-public class RSIParameters {
-	private final int periods;
-	private final int lowerValue;
-	private final int upperValue;
+import core.definitions.Chromosome;
+
+public class RSIParameters implements Chromosome {
+
+	private int periods;
+	private int lowerValue;
+	private int upperValue;
+
+	public RSIParameters() {
+	}
 
 	public RSIParameters(int periods, int lowerValue, int upperValue) {
 		this.periods = periods;

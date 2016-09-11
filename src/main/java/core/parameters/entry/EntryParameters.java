@@ -1,9 +1,15 @@
 package core.parameters.entry;
 
-public class EntryParameters {
-	private final MovingAverageParameters movingAverageParameters;
-	private final RSIParameters rsiParameters;
-	private final BollingerBandsParameters bollingerBandsParameters;
+import core.definitions.Chromosome;
+
+public class EntryParameters implements Chromosome {
+
+	private MovingAverageParameters movingAverageParameters;
+	private RSIParameters rsiParameters;
+	private BollingerBandsParameters bollingerBandsParameters;
+
+	public EntryParameters() {
+	}
 
 	public EntryParameters(MovingAverageParameters movingAverageParameters, RSIParameters rsiParameters,
 			BollingerBandsParameters bollingerBandsParameters) {

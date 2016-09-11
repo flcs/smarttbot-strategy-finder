@@ -1,12 +1,16 @@
 package core.parameters.exit;
 
+import core.definitions.Chromosome;
 import core.enums.StopType;
 import eu.verdelhan.ta4j.Decimal;
 
-public class FixedStopGainParameters {
+public class FixedStopGainParameters implements Chromosome {
 
-	private final StopType type;
-	private final Decimal value;
+	private StopType type;
+	private Decimal value;
+
+	public FixedStopGainParameters() {
+	}
 
 	public FixedStopGainParameters(StopType type, Decimal value) {
 		this.type = type;

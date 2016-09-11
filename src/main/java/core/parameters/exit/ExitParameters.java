@@ -1,13 +1,17 @@
 package core.parameters.exit;
 
+import core.definitions.Chromosome;
 import core.enums.ExitType;
 
-public class ExitParameters {
+public class ExitParameters implements Chromosome {
 
-	private final FixedStopLossParameters fixedStopLoss;
-	private final FixedStopGainParameters fixedStopGain;
-	private final ExitType exitType;
-	private final TrailingStopGainParameters trailingStopGain;
+	private FixedStopLossParameters fixedStopLoss;
+	private FixedStopGainParameters fixedStopGain;
+	private ExitType exitType;
+	private TrailingStopGainParameters trailingStopGain;
+
+	public ExitParameters() {
+	}
 
 	public ExitParameters(ExitType exitType, FixedStopLossParameters fixedStopLoss,
 			FixedStopGainParameters fixedStopGain, TrailingStopGainParameters trailingStopGain) {

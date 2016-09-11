@@ -1,13 +1,17 @@
 package core.parameters.exit;
 
+import core.definitions.Chromosome;
 import core.enums.StopType;
 import eu.verdelhan.ta4j.Decimal;
 
-public class TrailingStopGainParameters {
+public class TrailingStopGainParameters implements Chromosome {
 
-	private final StopType type;
-	private final Decimal trigger;
-	private final Decimal distance;
+	private StopType type;
+	private Decimal trigger;
+	private Decimal distance;
+
+	public TrailingStopGainParameters() {
+	}
 
 	public TrailingStopGainParameters(StopType type, Decimal trigger, Decimal distance) {
 		this.type = type;
