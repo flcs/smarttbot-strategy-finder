@@ -3,11 +3,18 @@ package core.parameters.daytrade;
 import java.time.LocalTime;
 
 import core.definitions.Chromosome;
+import core.gene.Gene;
+import core.genetic.LocalTimeFactory;
 
 public class DayTradeParameters implements Chromosome {
 
+	@Gene(factory = LocalTimeFactory.class)
 	private LocalTime initialEntryTimeLimit;
+
+	@Gene(factory = LocalTimeFactory.class)
 	private LocalTime finalEntryTimeLimit;
+
+	@Gene(factory = LocalTimeFactory.class)
 	private LocalTime exitTimeLimit;
 
 	public DayTradeParameters() {

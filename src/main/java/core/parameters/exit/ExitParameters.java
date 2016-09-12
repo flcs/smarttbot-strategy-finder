@@ -5,9 +5,9 @@ import core.enums.ExitType;
 
 public class ExitParameters implements Chromosome {
 
+	private ExitType exitType;
 	private FixedStopLossParameters fixedStopLoss;
 	private FixedStopGainParameters fixedStopGain;
-	private ExitType exitType;
 	private TrailingStopGainParameters trailingStopGain;
 
 	public ExitParameters() {
