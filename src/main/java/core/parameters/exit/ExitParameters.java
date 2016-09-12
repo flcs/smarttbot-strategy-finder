@@ -2,12 +2,19 @@ package core.parameters.exit;
 
 import core.definitions.Chromosome;
 import core.enums.ExitType;
+import core.gene.GeneNullable;
 
 public class ExitParameters implements Chromosome {
 
 	private ExitType exitType;
+	
+	@GeneNullable
 	private FixedStopLossParameters fixedStopLoss;
+
+	@GeneNullable
 	private FixedStopGainParameters fixedStopGain;
+
+	@GeneNullable
 	private TrailingStopGainParameters trailingStopGain;
 
 	public ExitParameters() {

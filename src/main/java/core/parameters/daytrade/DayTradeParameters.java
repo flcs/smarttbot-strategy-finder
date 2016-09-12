@@ -4,13 +4,16 @@ import java.time.LocalTime;
 
 import core.definitions.Chromosome;
 import core.gene.Gene;
+import core.gene.GeneNullable;
 import core.genetic.LocalTimeFactory;
 
 public class DayTradeParameters implements Chromosome {
 
+	@GeneNullable
 	@Gene(factory = LocalTimeFactory.class)
 	private LocalTime initialEntryTimeLimit;
 
+	@GeneNullable
 	@Gene(factory = LocalTimeFactory.class)
 	private LocalTime finalEntryTimeLimit;
 
